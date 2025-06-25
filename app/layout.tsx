@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navigations/Navbar";
 import LenisProvider from "@/wrapper/LenisScrollWrapper";
 import Footer from "@/components/Navigations/Footer";
+import { Toaster } from "react-hot-toast";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -28,6 +29,7 @@ export default function RootLayout({
       >
         <LenisProvider>
           <Navbar />
+          <Toaster position="top-right" />
 
           {children}
 

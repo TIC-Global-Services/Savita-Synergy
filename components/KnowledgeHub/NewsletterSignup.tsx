@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 import Image from 'next/image';
 import NewsLetterIcon from '@/assets/KnowledgeHub/newletter-icon.png';
+import toast from 'react-hot-toast';
+import { CustomToast } from '../Reusable/CustomToast';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -74,6 +76,9 @@ const NewsletterSignup: React.FC = () => {
       });
 
       setEmail('')
+      toast.custom((t) => <CustomToast message="You Great! Got Subscribed to our Letters" t={t} type="success" />, {
+        duration: 3000,
+    });
       setSuccessMessage('Thank you for subscribing!');
       return true;
     } catch (error) {

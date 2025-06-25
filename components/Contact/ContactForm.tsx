@@ -5,6 +5,8 @@ import { FaPhone as Phone } from "react-icons/fa6";
 import { IoIosMail as Mail } from "react-icons/io";
 import { FaMapLocationDot as Address } from "react-icons/fa6";
 import { FaChevronDown as ChevronDown } from "react-icons/fa6";
+import toast from 'react-hot-toast';
+import { CustomToast } from '../Reusable/CustomToast';
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -125,7 +127,7 @@ const ContactForm: React.FC = () => {
 
             // Replace with your Google Apps Script Web App URL
             const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvy7oEqt2sSfa_8JQujrEqHMqaDjGXEUndqzywCbMTgCxB4dMypfoCEu6UydjECQSL/exec';
-            
+
             const response = await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -137,9 +139,14 @@ const ContactForm: React.FC = () => {
 
             // console.log('Contact form submitted:', submissionData);
             setSubmitStatus('success');
+            toast.custom((t) => <CustomToast message="Message sent successfully!" t={t} type="success" />, {
+                duration: 3000,
+            });
             setFormData({ name: '', email: '', phone: '', product: '', message: '' });
         } catch (error) {
-            console.error('Error submitting form:', error);
+            toast.custom((t) => <CustomToast message="Failed to send message. Try again." t={t} type="error" />, {
+                duration: 3000,
+            });
             setSubmitStatus('error');
         } finally {
             setIsSubmitting(false);
