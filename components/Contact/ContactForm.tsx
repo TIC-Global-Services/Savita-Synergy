@@ -333,7 +333,7 @@ const ContactForm: React.FC = () => {
                                 variants={itemVariants}
                                 className="text-green-600 text-sm sm:text-base text-center mt-4"
                             >
-                                Message sent successfully! We'll get back to you soon.
+                                Message sent successfully! We&apos;ll get back to you soon.
                             </motion.p>
                         )}
                         {submitStatus === 'error' && (
