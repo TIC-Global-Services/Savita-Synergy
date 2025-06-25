@@ -44,13 +44,13 @@ const NewsletterSignup: React.FC = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
+  // const [successMessage, setSuccessMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setEmailError('');
-    setSuccessMessage('');
+    // setSuccessMessage('');
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
@@ -79,7 +79,7 @@ const NewsletterSignup: React.FC = () => {
       toast.custom((t) => <CustomToast message="You Great! Got Subscribed to our Letters" t={t} type="success" />, {
         duration: 3000,
     });
-      setSuccessMessage('Thank you for subscribing!');
+      // setSuccessMessage('Thank you for subscribing!');
       return true;
     } catch (error) {
       setEmailError('Network error. Please try again later.');
@@ -135,7 +135,7 @@ const NewsletterSignup: React.FC = () => {
                 onChange={(e) => {
                   setEmail(e.target.value);
                   setEmailError('');
-                  setSuccessMessage('');
+                  // setSuccessMessage('');
                 }}
                 placeholder="Enter your email"
                 className="w-full px-4 py-3 rounded-full border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-lighter transition-all duration-200"
@@ -147,11 +147,11 @@ const NewsletterSignup: React.FC = () => {
                   {emailError}
                 </p>
               )}
-              {successMessage && (
+              {/* {successMessage && (
                 <p id="success-message" className="text-green-500 text-sm mt-1 text-left">
                   {successMessage}
                 </p>
-              )}
+              )} */}
             </div>
             <motion.button
               type="submit"

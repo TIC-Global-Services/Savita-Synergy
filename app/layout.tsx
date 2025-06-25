@@ -5,6 +5,7 @@ import Navbar from "@/components/Navigations/Navbar";
 import LenisProvider from "@/wrapper/LenisScrollWrapper";
 import Footer from "@/components/Navigations/Footer";
 import { Toaster } from "react-hot-toast";
+import CookieConsent from "@/components/Reusable/CookieConsent";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -33,6 +34,8 @@ export default function RootLayout({
 
           {children}
 
+          
+          <CookieConsent />
           <Footer />
         </LenisProvider>
       </body>

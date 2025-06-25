@@ -5,6 +5,8 @@ import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
 import FooterBG from '@/assets/Footer/FooterBG.jpg';
 import { FaFacebook as FaceBookIcon, FaInstagram as InstaIcon } from 'react-icons/fa';
+import { CustomToast } from '../Reusable/CustomToast';
+import toast from 'react-hot-toast';
 
 const Footer = () => {
     const [email, setEmail] = useState('');
@@ -30,31 +32,41 @@ const Footer = () => {
         e.preventDefault();
         setIsSubmitting(true);
         setEmailError('');
-
+    
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email) {
-            setEmailError('Email is required');
-            setIsSubmitting(false);
-            return;
+          setEmailError('Email is required');
+          setIsSubmitting(false);
+          return;
         }
         if (!emailRegex.test(email)) {
-            setEmailError('Please enter a valid email');
-            setIsSubmitting(false);
-            return;
+          setEmailError('Please enter a valid email');
+          setIsSubmitting(false);
+          return;
         }
-
+    
         try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            console.log('Subscribed email:', email); // Replace with actual API call
-            setEmail('');
-            // Optionally show success message (e.g., via toast or state)
+          const response = await fetch('https://script.google.com/macros/s/AKfycbyiC9P9maWE0zN-c-byBRmDY0ZQp-EEBZDjWucgFH9-VQSl_ugp7P2ZThxDnacKxkgoBg/exec', { // Replace with your deployed Web App URL
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+            mode: 'no-cors', // Required for Google Apps Script
+            cache: 'no-cache',
+          });
+    
+          setEmail('')
+          toast.custom((t) => <CustomToast message="You Great! Got Subscribed to our Letters" t={t} type="success" />, {
+            duration: 3000,
+        });
+          return true;
         } catch (error) {
-            setEmailError('Subscription failed. Please try again.');
+          setEmailError('Network error. Please try again later.');
         } finally {
-            setIsSubmitting(false);
+          setIsSubmitting(false);
         }
-    };
+      };
 
     // Animation variants
     const containerVariants: Variants = {
@@ -254,12 +266,12 @@ const Footer = () => {
                         © {new Date().getFullYear()} Savita Synergy. All rights reserved.
                     </p>
                     <motion.div variants={hoverVariants} whileHover="hover " className=' space-x-6'>
-                        <Link
+                        {/* <Link
                             href="/privacy"
                             className="text-gray-300 text-xs sm:text-sm hover:text-white transition-colors duration-200"
                         >
                             Terms & Conditions
-                        </Link>
+                        </Link> */}
                         <Link
                             href="/privacy"
                             className="text-gray-300 text-xs sm:text-sm hover:text-white transition-colors duration-200"
