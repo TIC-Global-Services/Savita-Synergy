@@ -4,6 +4,7 @@ import { motion, Variants } from 'framer-motion';
 import { FaPhone as Phone } from "react-icons/fa6";
 import { IoIosMail as Mail } from "react-icons/io";
 import { FaMapLocationDot as Address } from "react-icons/fa6";
+import { FaChevronDown as ChevronDown } from "react-icons/fa6";
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -33,18 +34,28 @@ const ContactForm: React.FC = () => {
         name: '',
         email: '',
         phone: '',
+        product: '',
         message: '',
     });
     const [errors, setErrors] = useState({
         name: '',
         email: '',
         phone: '',
+        product: '',
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
+    const productOptions = [
+        { value: '', label: 'Select a product' },
+        { value: 'aluminum', label: 'Aluminum' },
+        { value: 'ingots-billets', label: 'Ingots & Billets' },
+        { value: 'extrusions-profiles', label: 'Extrusions & Profiles' },
+        { value: 'custom-dies', label: 'Custom Dies' },
+    ];
+
     const handleInputChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
     ) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -53,7 +64,7 @@ const ContactForm: React.FC = () => {
     };
 
     const validateForm = () => {
-        const newErrors = { name: '', email: '', phone: '' };
+        const newErrors = { name: '', email: '', phone: '', product: '' };
         let isValid = true;
 
         if (!formData.name.trim()) {
@@ -71,9 +82,28 @@ const ContactForm: React.FC = () => {
             newErrors.phone = 'Phone number is required';
             isValid = false;
         }
+        if (!formData.product) {
+            newErrors.product = 'Please select a product';
+            isValid = false;
+        }
 
         setErrors(newErrors);
         return isValid;
+    };
+
+    const getCurrentTimestamp = () => {
+        const now = new Date();
+        const options: Intl.DateTimeFormatOptions = {
+            timeZone: 'Asia/Kolkata',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        };
+        return now.toLocaleString('en-IN', options);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -87,15 +117,29 @@ const ContactForm: React.FC = () => {
         }
 
         try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            console.log('Contact form submitted:', {
+            const timestamp = getCurrentTimestamp();
+            const submissionData = {
                 ...formData,
-                timestamp: '12:33 PM IST, Sunday, June 22, 2025',
-            }); // Updated to current time
+                timestamp: timestamp,
+            };
+
+            // Replace with your Google Apps Script Web App URL
+            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxFNSfUKo6fK5na9WboaKT5OFVb1B-ytOMOz971hES2_-b2grSVOJWwe2cZ0n60M2Ab/exec';
+            
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(submissionData)
+            });
+
+            // console.log('Contact form submitted:', submissionData);
             setSubmitStatus('success');
-            setFormData({ name: '', email: '', phone: '', message: '' });
+            setFormData({ name: '', email: '', phone: '', product: '', message: '' });
         } catch (error) {
+            console.error('Error submitting form:', error);
             setSubmitStatus('error');
         } finally {
             setIsSubmitting(false);
@@ -106,11 +150,11 @@ const ContactForm: React.FC = () => {
         <section className="py-20 px-4 sm:px-6 lg:px-20 bg-gray-50">
             <motion.div variants={itemVariants} className="text-center mb-10">
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight">
-                    Let’s Connect
+                    Let's Connect
                 </h1>
                 <p className="text-gray-600 text-lg sm:text-xl max-w-3xl mx-auto">
                     Have a question, need a quote, or want to learn more about our aluminum products and
-                    services? We’re here to help.
+                    services? We're here to help.
                 </p>
             </motion.div>
             <motion.div
@@ -145,7 +189,7 @@ const ContactForm: React.FC = () => {
                                 value={formData.name}
                                 onChange={handleInputChange}
                                 placeholder="Enter your full name"
-                                className="w-full px-5 py-3 rounded-full border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                                className="w-full px-5 py-3 rounded-full border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200"
                                 aria-describedby={errors.name ? 'name-error' : undefined}
                                 disabled={isSubmitting}
                             />
@@ -172,7 +216,7 @@ const ContactForm: React.FC = () => {
                                 value={formData.email}
                                 onChange={handleInputChange}
                                 placeholder="Enter your email"
-                                className="w-full px-5 py-3 rounded-full border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                                className="w-full px-5 py-3 rounded-full border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200"
                                 aria-describedby={errors.email ? 'email-error' : undefined}
                                 disabled={isSubmitting}
                             />
@@ -199,13 +243,47 @@ const ContactForm: React.FC = () => {
                                 value={formData.phone}
                                 onChange={handleInputChange}
                                 placeholder="Enter your phone number"
-                                className="w-full px-5 py-3 rounded-full border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                                className="w-full px-5 py-3 rounded-full border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200"
                                 aria-describedby={errors.phone ? 'phone-error' : undefined}
                                 disabled={isSubmitting}
                             />
                             {errors.phone && (
                                 <p id="phone-error" className="text-red-500 text-sm mt-2">
                                     {errors.phone}
+                                </p>
+                            )}
+                        </motion.div>
+
+                        {/* Product Selection */}
+                        <motion.div variants={itemVariants}>
+                            <label
+                                htmlFor="product"
+                                className="block text-sm sm:text-base font-medium text-gray-900 mb-2"
+                            >
+                                Product Interest <span className="text-red-500">*</span>
+                            </label>
+                            <div className="relative">
+                                <select
+                                    id="product"
+                                    name="product"
+                                    required
+                                    value={formData.product}
+                                    onChange={handleInputChange}
+                                    className="w-full px-5 py-3 rounded-full border border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200 appearance-none cursor-pointer "
+                                    aria-describedby={errors.product ? 'product-error' : undefined}
+                                    disabled={isSubmitting}
+                                >
+                                    {productOptions.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </select>
+                                <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
+                            </div>
+                            {errors.product && (
+                                <p id="product-error" className="text-red-500 text-sm mt-2">
+                                    {errors.product}
                                 </p>
                             )}
                         </motion.div>
@@ -225,7 +303,7 @@ const ContactForm: React.FC = () => {
                                 onChange={handleInputChange}
                                 required
                                 placeholder="Enter your message"
-                                className="w-full px-5 py-3 rounded-xl border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-200"
+                                className="w-full px-5 py-3 rounded-xl border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200"
                                 rows={5}
                                 disabled={isSubmitting}
                             />
@@ -236,7 +314,7 @@ const ContactForm: React.FC = () => {
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="px-8 py-3 bg-lighter text-white font-semibold rounded-full hover:bg-primary transition-all duration-200 cursor-pointer shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                                className="px-8 py-3 bg-lighter text-white font-semibold rounded-full hover:bg-primary transition-all duration-200 cursor-pointer shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
                             >
                                 {isSubmitting ? 'Sending...' : 'Send Message'}
                             </button>
@@ -248,7 +326,7 @@ const ContactForm: React.FC = () => {
                                 variants={itemVariants}
                                 className="text-green-600 text-sm sm:text-base text-center mt-4"
                             >
-                                Message sent successfully at 12:33 PM IST, Sunday, June 22, 2025!
+                                Message sent successfully! We'll get back to you soon.
                             </motion.p>
                         )}
                         {submitStatus === 'error' && (
@@ -266,10 +344,8 @@ const ContactForm: React.FC = () => {
             <motion.div
                 variants={itemVariants}
             >
-
                 <div className="space-y-6 flex flex-col md:flex-row text-center md:text-start items-center w-full justify-center md:justify-between max-w-4xl mx-auto my-10">
                     <div>
-
                         <p className="text-gray-600 text-lg leading-relaxed flex items-start justify-start gap-4"> <Phone size={22} /> +91 98765 43210</p>
                     </div>
                     <div>
@@ -287,4 +363,4 @@ const ContactForm: React.FC = () => {
     );
 };
 
-export default ContactForm
+export default ContactForm;
