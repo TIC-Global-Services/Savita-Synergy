@@ -124,7 +124,7 @@ const ContactForm: React.FC = () => {
             };
 
             // Replace with your Google Apps Script Web App URL
-            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxFNSfUKo6fK5na9WboaKT5OFVb1B-ytOMOz971hES2_-b2grSVOJWwe2cZ0n60M2Ab/exec';
+            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvy7oEqt2sSfa_8JQujrEqHMqaDjGXEUndqzywCbMTgCxB4dMypfoCEu6UydjECQSL/exec';
             
             const response = await fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
