@@ -49,7 +49,7 @@ const NewsletterSignup: React.FC = () => {
     setIsSubmitting(true);
     setEmailError('');
     setSuccessMessage('');
-  
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
       setEmailError('Email is required');
@@ -61,31 +61,27 @@ const NewsletterSignup: React.FC = () => {
       setIsSubmitting(false);
       return;
     }
-  
+
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbxGKgr-KBfb9XlirOXG1y9iY_4ikexvogA1BQQt6dMJsnURIrchHdIWEUPWlYQwydAGlw/exec', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbyiC9P9maWE0zN-c-byBRmDY0ZQp-EEBZDjWucgFH9-VQSl_ugp7P2ZThxDnacKxkgoBg/exec', { // Replace with your deployed Web App URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email }),
+        mode: 'no-cors', // Required for Google Apps Script
+        cache: 'no-cache',
       });
-  
-      const result = await response.json();
-  
-      if (result.status === 'success') {
-        setEmail('');
-        setSuccessMessage('Thank you for subscribing!');
-      } else {
-        setEmailError(result.message || 'Subscription failed. Please try again.');
-      }
+
+      setEmail('')
+      setSuccessMessage('Thank you for subscribing!');
+      return true;
     } catch (error) {
       setEmailError('Network error. Please try again later.');
     } finally {
       setIsSubmitting(false);
     }
   };
-  
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8">
