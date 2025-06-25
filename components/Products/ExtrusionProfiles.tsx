@@ -1,4 +1,3 @@
-
 'use client'
 import React from 'react';
 import { motion, type Variants } from 'framer-motion';
@@ -22,6 +21,7 @@ import TrackCapSystem from '@/assets/Product/Extrusions/Architectural/angles.png
 interface Profile {
     title: string;
     img: StaticImageData;
+    pdfLink: string; // Added pdfLink to the Profile interface
 }
 
 const containerVariants: Variants = {
@@ -62,29 +62,29 @@ const headerVariants: Variants = {
 
 const ExtrusionProfiles: React.FC = () => {
     const Structural: Profile[] = [
-        { title: 'Bars and Rods', img: Bars },
-        { title: 'Tubes', img: Tubes },
-        { title: 'Channels', img: Channels },
-        { title: 'Angles', img: Angles },
-        { title: 'Tees', img: Tees },
-        { title: 'Door Sections', img: DoorSections },
+        { title: 'Bars and Rods', img: Bars, pdfLink: '/catelogues/extrusion.pdf' },
+        { title: 'Tubes', img: Tubes, pdfLink: '/catelogues/extrusion.pdf' },
+        { title: 'Channels', img: Channels, pdfLink: '/catelogues/extrusion.pdf' },
+        { title: 'Angles', img: Angles, pdfLink: '/catelogues/extrusion.pdf' },
+        { title: 'Tees', img: Tees, pdfLink: '/catelogues/extrusion.pdf' },
+        { title: 'Door Sections', img: DoorSections, pdfLink: '/catelogues/extrusion.pdf' },
     ];
 
     const Architectural: Profile[] = [
-        { title: 'Sliding Window Sections', img: SlidingWindow },
-        { title: 'Handle Sections', img: HandleSections },
-        { title: 'Skirtings', img: Skirtings },
-        { title: 'Kitchen Profiles', img: KitchenProfiles },
-        { title: '20x54 Window Series', img: WindowSeries },
-        { title: '50mm Slidings', img: Slidings },
-        { title: 'Casement Sections', img: CasementSections },
-        { title: '30*65 Single Glass', img: SingleGlass },
-        { title: '30mm Sliding Track Cap System', img: TrackCapSystem },
+        { title: 'Sliding Window Sections', img: SlidingWindow, pdfLink: '/catelogues/extrusion.pdf' },
+        { title: 'Handle Sections', img: HandleSections, pdfLink: '/catelogues/extrusion.pdf' },
+        { title: 'Skirtings', img: Skirtings, pdfLink: '/catelogues/extrusion.pdf' },
+        { title: 'Kitchen Profiles', img: KitchenProfiles, pdfLink: '/catelogues/extrusion.pdf' },
+        { title: '20x54 Window Series', img: WindowSeries, pdfLink: '/catelogues/extrusion.pdf' },
+        { title: '50mm Slidings', img: Slidings, pdfLink: '/catelogues/extrusion.pdf' },
+        { title: 'Casement Sections', img: CasementSections, pdfLink: '/catelogues/extrusion.pdf' },
+        { title: '30*65 Single Glass', img: SingleGlass, pdfLink: '/catelogues/extrusion.pdf' },
+        { title: '30mm Sliding Track Cap System', img: TrackCapSystem, pdfLink: '/catelogues/extrusion.pdf' },
     ];
 
     return (
         <section className="py-12 px-4 sm:px-6 lg:px-20 bg-gray-50">
-            <div className=" mx-auto">
+            <div className="mx-auto">
                 {/* Structural Section */}
                 <motion.div
                     variants={containerVariants}
@@ -104,11 +104,15 @@ const ExtrusionProfiles: React.FC = () => {
                         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
                     >
                         {Structural.map((content) => (
-                            <motion.div
+                            <motion.a
                                 key={content.title}
+                                href={content.pdfLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 variants={itemVariants}
-                                className=" overflow-hidden"
+                                className="block overflow-hidden cursor-pointer"
                                 whileHover={{ y: -5 }}
+                                aria-label={`View PDF for ${content.title}`}
                             >
                                 <div className="relative aspect-video rounded-xl overflow-hidden">
                                     <Image
@@ -120,13 +124,12 @@ const ExtrusionProfiles: React.FC = () => {
                                         quality={75}
                                     />
                                 </div>
-
                                 <div className="p-4">
                                     <h3 className="text-lg font-semibold text-gray-800 text-center">
                                         {content.title}
                                     </h3>
                                 </div>
-                            </motion.div>
+                            </motion.a>
                         ))}
                     </motion.div>
                 </motion.div>
@@ -149,11 +152,15 @@ const ExtrusionProfiles: React.FC = () => {
                         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
                     >
                         {Architectural.map((content) => (
-                            <motion.div
+                            <motion.a
                                 key={content.title}
+                                href={content.pdfLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 variants={itemVariants}
-                                className=" overflow-hidden"
+                                className="block overflow-hidden cursor-pointer"
                                 whileHover={{ y: -5 }}
+                                aria-label={`View PDF for ${content.title}`}
                             >
                                 <div className="relative aspect-video rounded-xl overflow-hidden">
                                     <Image
@@ -165,13 +172,12 @@ const ExtrusionProfiles: React.FC = () => {
                                         quality={75}
                                     />
                                 </div>
-
                                 <div className="p-4">
                                     <h3 className="text-lg font-semibold text-gray-800 text-center">
                                         {content.title}
                                     </h3>
                                 </div>
-                            </motion.div>
+                            </motion.a>
                         ))}
                     </motion.div>
                 </motion.div>

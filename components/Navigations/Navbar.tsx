@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/contact"
-                className="px-4 py-2 bg-lighter text-gray-900 rounded-full hover:bg-gray-300 transition-colors"
+                className="px-4 py-2 bg-lighter text-white rounded-full hover:bg-gray-300 transition-colors"
               >
                 Contact
               </Link>

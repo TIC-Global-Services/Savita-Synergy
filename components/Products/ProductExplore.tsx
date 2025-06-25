@@ -132,7 +132,7 @@ const ProductExplore = () => {
                 <div className=' pt-4'>
                   <Link
                     href="/contact"
-                    className="px-4 py-2 bg-lighter text-gray-900 rounded-full hover:bg-gray-300 transition-colors"
+                    className="px-4 py-2 bg-lighter text-white rounded-full hover:bg-gray-300 transition-colors"
                   >
                     Contact
                   </Link>

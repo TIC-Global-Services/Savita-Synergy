@@ -21,7 +21,7 @@ const BlogContent: React.FC<BlogContentProps> = ({ content }) => {
       <ReactMarkdown
         components={{
           h1: ({ children }) => (
-            <h1 className="text-4xl sm:text-5xl font-bold mb-6 text-center text-primary">
+            <h1 className="text-4xl sm:text-5xl font-bold mb-6  text-primary">
               {children}
             </h1>
           ),
