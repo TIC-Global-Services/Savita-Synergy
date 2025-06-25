@@ -42,12 +42,14 @@ const NewsletterSignup: React.FC = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setEmailError('');
-
+    setSuccessMessage('');
+  
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
       setEmailError('Email is required');
@@ -59,19 +61,31 @@ const NewsletterSignup: React.FC = () => {
       setIsSubmitting(false);
       return;
     }
-
+  
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log('Subscribed email:', email); // Replace with actual API call
-      setEmail('');
-      // Optionally show success message (e.g., via toast or state)
+      const response = await fetch('https://script.google.com/macros/s/AKfycbxGKgr-KBfb9XlirOXG1y9iY_4ikexvogA1BQQt6dMJsnURIrchHdIWEUPWlYQwydAGlw/exec', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+  
+      const result = await response.json();
+  
+      if (result.status === 'success') {
+        setEmail('');
+        setSuccessMessage('Thank you for subscribing!');
+      } else {
+        setEmailError(result.message || 'Subscription failed. Please try again.');
+      }
     } catch (error) {
-      setEmailError('Subscription failed. Please try again.');
+      setEmailError('Network error. Please try again later.');
     } finally {
       setIsSubmitting(false);
     }
   };
+  
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8">
@@ -120,6 +134,7 @@ const NewsletterSignup: React.FC = () => {
                 onChange={(e) => {
                   setEmail(e.target.value);
                   setEmailError('');
+                  setSuccessMessage('');
                 }}
                 placeholder="Enter your email"
                 className="w-full px-4 py-3 rounded-full border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-lighter transition-all duration-200"
@@ -129,6 +144,11 @@ const NewsletterSignup: React.FC = () => {
               {emailError && (
                 <p id="email-error" className="text-red-500 text-sm mt-1 text-left">
                   {emailError}
+                </p>
+              )}
+              {successMessage && (
+                <p id="success-message" className="text-green-500 text-sm mt-1 text-left">
+                  {successMessage}
                 </p>
               )}
             </div>
