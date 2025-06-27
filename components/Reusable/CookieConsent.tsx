@@ -112,13 +112,11 @@ const Toast: React.FC<ToastProps> = ({
         
         <div className="flex flex-col space-y-2 text-xs text-gray-500">
           <p>
-            <Link href="/privacy-policy" className="text-blue-600 hover:text-blue-700 font-medium">
+            <Link href="/policy" className="text-blue-600 hover:text-blue-700 font-medium">
               Privacy Policy
             </Link>
             {' • '}
-            <Link href="/cookie-policy" className="text-blue-600 hover:text-blue-700 font-medium">
-              Cookie Policy
-            </Link>
+            
           </p>
         </div>
 

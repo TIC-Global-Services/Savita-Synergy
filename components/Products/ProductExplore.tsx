@@ -121,7 +121,7 @@ const ProductExplore = () => {
                       <Link
                         key={subIdx}
                         href={sublink.link}
-                        className=" underline text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-semibold text-xs sm:text-sm transition-transform duration-300 hover:scale-105"
+                        className=" underline text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-semibold text-xs sm:text-lg transition-transform duration-300 hover:scale-105"
                       >
                         {sublink.title}
                       </Link>
@@ -132,7 +132,7 @@ const ProductExplore = () => {
                 <div className=' pt-4'>
                   <Link
                     href="/contact"
-                    className="px-4 py-2 bg-lighter text-white rounded-full hover:bg-gray-300 transition-colors"
+                    className="px-4 py-2 bg-lighter text-lg text-white rounded-full hover:bg-primary transition-colors"
                   >
                     Contact
                   </Link>

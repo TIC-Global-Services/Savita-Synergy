@@ -8,12 +8,12 @@ import { Menu, X } from 'lucide-react';
 
 const navLinks = [
   { title: 'Home', slug: '/' },
-  { title: 'About us', slug: '/about' },
+  { title: 'About Us', slug: '/about' },
   { title: 'Products', slug: '/products' },
   { title: 'Services', slug: '/services' },
   { title: 'By Industry', slug: '/by-industry' },
   { title: 'Knowledge Hub', slug: '/knowledge-hub' },
-  { title: 'Careers', slug: '/careers' },
+  // { title: 'Careers', slug: '/careers' },
 ];
 
 const Navbar: React.FC = () => {
@@ -72,9 +72,9 @@ const Navbar: React.FC = () => {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/contact"
-                className="px-4 py-2 bg-lighter text-white rounded-full hover:bg-gray-300 transition-colors"
+                className="px-4 py-2 bg-lighter text-white rounded-full hover:bg-secondary transition-colors"
               >
-                Contact
+                Contact Us
               </Link>
             </motion.div>
           </li>

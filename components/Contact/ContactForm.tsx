@@ -54,6 +54,9 @@ const ContactForm: React.FC = () => {
         { value: 'ingots-billets', label: 'Ingots & Billets' },
         { value: 'extrusions-profiles', label: 'Extrusions & Profiles' },
         { value: 'custom-dies', label: 'Custom Dies' },
+        { value: 'anodizing', label: 'Anodizing' },
+        { value: 'powder-coating', label: 'Powder Coating' },
+        { value: 'others', label: 'Others' },
     ];
 
     const handleInputChange = (
@@ -267,7 +270,7 @@ const ContactForm: React.FC = () => {
                                 htmlFor="product"
                                 className="block text-sm sm:text-base font-medium text-gray-900 mb-2"
                             >
-                                Product Interest <span className="text-red-500">*</span>
+                                Product/Service Interest <span className="text-red-500">*</span>
                             </label>
                             <div className="relative">
                                 <select

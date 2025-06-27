@@ -7,7 +7,7 @@ const OtherVentures = () => {
   const VentureLinks = [
     { title: 'Tours & Travels', href: '#' },
     { title: 'Karigari By Savita', href: '#' },
-    { title: 'Travel Planning', href: '#' },
+    // { title: 'Travel Planning', href: '#' },
   ];
 
   // Animation variants
@@ -56,7 +56,7 @@ const OtherVentures = () => {
         whileInView="visible"
         viewport={{ once: true, margin: '-100px' }}
         variants={containerVariants}
-        className="max-w-5xl mx-auto"
+        className="max-w-3xl mx-auto"
         aria-labelledby="ventures-heading"
       >
         <motion.h1
@@ -68,7 +68,7 @@ const OtherVentures = () => {
         </motion.h1>
         <motion.div
           variants={containerVariants}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 "
+          className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 "
         >
           {VentureLinks.map((btn) => (
             <motion.div

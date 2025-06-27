@@ -24,7 +24,7 @@ const Footer = () => {
         { title: 'Services', link: '/services' },
         { title: 'By Industry', link: '/by-industry' },
         { title: 'Knowledge Hub', link: '/knowledge-hub' },
-        { title: 'Careers', link: '/careers' },
+        // { title: 'Careers', link: '/careers' },
         { title: 'Contact us', link: '/contact' },
     ];
 

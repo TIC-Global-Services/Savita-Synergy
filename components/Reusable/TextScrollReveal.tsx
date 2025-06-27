@@ -19,7 +19,8 @@ export const TextReveal: FC<TextRevealProps> = ({ children, className }) => {
     throw new Error('TextReveal: children must be a string');
   }
 
-  const words = children.split(' ');
+  const words = children.split(/(\s+|\n)/);
+
 
   return (
     <div ref={targetRef} className={cn('relative z-0 ', className)}>
@@ -30,18 +31,29 @@ export const TextReveal: FC<TextRevealProps> = ({ children, className }) => {
       >
         <span
           className={
-            'flex flex-wrap justify-center p-4 sm:p-6 md:p-8 text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-black/20'
+            'flex flex-wrap justify-center text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-black/20'
           }
         >
           {words.map((word, i) => {
+            if (word === '\n') {
+              return <br key={`br-${i}`} />;
+            }
+
+            if (word.trim() === '') {
+              return <span key={`space-${i}`}>{word}</span>; // preserve space
+            }
+
             const start = i / words.length;
-            const end = start + 0.9 / words.length; // Slightly overlap ranges for smoother reveal
+            const end = start + 0.9 / words.length;
+
             return (
               <Word key={i} progress={scrollYProgress} range={[start, end]}>
                 {word}
               </Word>
             );
           })}
+
+
         </span>
       </div>
     </div>

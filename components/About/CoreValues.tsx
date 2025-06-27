@@ -6,32 +6,32 @@ const coreValuesData = [
   {
     letter: 'S',
     title: 'Service First',
-    description: 'We lead with a mindset of serving — our customers, team, and partners.',
+    description: 'We prioritize the needs of our customers, team, and partners with a mindset of service.',
   },
   {
     letter: 'A',
-    title: 'Authenticity',
-    description: 'We act with integrity, staying true to our values and promises.',
+    title: 'Accountability',
+    description: 'We take ownership of our actions and deliver on our commitments with responsibility.',
   },
   {
     letter: 'V',
-    title: 'Visionary Thinking',
-    description: 'We innovate boldly, shaping the future with creative solutions.',
+    title: 'Value Creation',
+    description: 'We drive innovation and deliver meaningful impact through creative and effective solutions.',
   },
   {
     letter: 'I',
-    title: 'Inclusion',
-    description: 'We embrace diverse perspectives to build stronger teams and ideas.',
+    title: 'Integrity',
+    description: 'We uphold honesty and strong moral principles in all our actions and decisions.',
   },
   {
     letter: 'T',
-    title: 'Tenacity',
-    description: 'We persevere through challenges with grit and determination.',
+    title: 'Trustworthiness',
+    description: 'We build lasting relationships by being reliable, transparent, and consistent.',
   },
   {
     letter: 'A',
     title: 'Adaptability',
-    description: 'We thrive in change, evolving quickly to meet new opportunities.',
+    description: 'We embrace change and adjust swiftly to evolving circumstances and new challenges.',
   },
 ];
 

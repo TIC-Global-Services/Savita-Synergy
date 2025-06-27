@@ -1,5 +1,6 @@
 'use client';
 import { motion, type Variants } from 'framer-motion';
+import Link from 'next/link';
 import React from 'react';
 
 const containerVariants: Variants = {
@@ -164,7 +165,7 @@ const PrivacyPolicy: React.FC = () => {
             </p>
             <p className="text-base text-gray-800 leading-relaxed">
               Savita Synergy Pvt. Ltd.<br />
-              Email: [Insert Email Address]<br />
+              Email: <Link href={'mailto:legal@savitasynergy.com'} className=' font-semibold'>legal@savitasynergy.com</Link><br />
               Phone: [Insert Phone Number]<br />
               Address: [Insert Address]
             </p>

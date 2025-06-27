@@ -3,6 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 import { motion, Variants } from 'framer-motion';
 import TeamMember from '@/assets/About/TeamMem.jpg';
+import Mayank from '@/assets/About/Mayank_Bansal_photo.jpg';
 
 const OurTeam = () => {
     const TeamMembers = [
@@ -52,24 +53,24 @@ const OurTeam = () => {
     };
 
     return (
-        <div className="px-4 sm:px-6 md:px-8 lg:px-20 py-16 bg-gradient-to-b from-gray-50 to-white">
+        <div className="px-4 sm:px-6 md:px-8 lg:px-20 py-16 bg-gradient-to-b from-gray-50 to-white ">
             {/* Leadership Section */}
             <motion.section
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: '-100px' }}
                 variants={containerVariants}
-                className="mb-20 mx-auto"
+                className=" mx-auto"
             >
                 <motion.h1
                     variants={itemVariants}
-                    className="text-4xl sm:text-5xl font-semibold text-gray-900 mb-10 text-center lg:text-left tracking-tight"
+                    className="text-4xl sm:text-5xl font-semibold  text-gray-900 mb-10 text-center  tracking-tight"
                 >
                     Leadership
                 </motion.h1>
                 <motion.div
                     variants={itemVariants}
-                    className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16"
+                    className="flex flex-col lg:flex-row justify-center items-center gap-8 lg:gap-16"
                 >
                     <motion.div
                         variants={itemVariants}
@@ -77,14 +78,14 @@ const OurTeam = () => {
                         className="relative w-64 h-80 rounded-2xl overflow-hidden shadow-xl"
                     >
                         <Image
-                            src={TeamMember}
+                            src={Mayank}
                             alt="Mayank Bansal"
                             className="object-cover aspect-[3/4]"
                             priority
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                     </motion.div>
-                    <div className="flex-1 text-center lg:text-left space-y-4">
+                    <div className=" text-center lg:text-left space-y-4">
                         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Mayank Bansal</h2>
                         <h3 className="text-base sm:text-lg text-gray-600 font-medium">
                             Entrepreneur | Aluminum Industry Expert
@@ -100,7 +101,7 @@ const OurTeam = () => {
             </motion.section>
 
             {/* Our Team Section */}
-            <motion.section
+            {/* <motion.section
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: '-100px' }}
@@ -140,7 +141,7 @@ const OurTeam = () => {
                         </motion.div>
                     ))}
                 </motion.div>
-            </motion.section>
+            </motion.section> */}
         </div>
     );
 };
