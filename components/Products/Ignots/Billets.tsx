@@ -36,34 +36,20 @@ const imageVariants: Variants = {
     },
 };
 
-const IgnotsSecond = () => {
+const Billets = () => {
     return (
         <div className="py-16 px-4 sm:px-6 lg:px-24 bg-gradient-to-b from-gray-50 to-white">
             <motion.div
-                className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+                className=" mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
                 initial="hidden"
                 animate="visible"
                 variants={containerVariants}
-            >
-                {/* Text Content */}
-                <motion.div className="space-y-8" variants={containerVariants}>
-                    <motion.h2
-                        className="text-3xl md:text-4xl font-bold text-gray-800"
-                        variants={textVariants}
-                    >
-                        Premium Aluminium Ingots & Billets
-                    </motion.h2>
-                    <motion.p
-                        className="text-lg md:text-xl text-gray-600 leading-relaxed"
-                        variants={textVariants}
-                    >
-                        At Savita Synergy, we deliver high-quality aluminium ingots and billets, crafted with precision to serve as the foundation for diverse aluminium products. As an integrated manufacturer, we uphold stringent quality control, ensuring consistent composition and industrial-grade performance. Our products are optimized for extrusion, casting, rolling, and forging, meeting international standards for purity and process stability in every batch.
-                    </motion.p>
-                   
-                </motion.div>
 
-                {/* Image */}
-                <motion.div
+
+            >
+
+                  {/* Image */}
+                  <motion.div
                     className="relative overflow-hidden rounded-2xl shadow-lg"
                     variants={imageVariants}
                     whileHover="hover"
@@ -78,9 +64,28 @@ const IgnotsSecond = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
                 </motion.div>
+
+                {/* Text Content */}
+                <motion.div className="space-y-8" variants={containerVariants}>
+                    <motion.h2
+                        className="text-3xl md:text-4xl font-bold text-gray-800"
+                        variants={textVariants}
+                    >
+                        Aluminium Billets
+                    </motion.h2>
+                    <motion.p
+                        className="text-lg md:text-xl text-gray-600 leading-relaxed"
+                        variants={textVariants}
+                    >
+                        Our aluminium billets are precision-cast for superior extrusion performance. Typically cast in 6000-series alloys, they are extrusion-ready and optimized for mechanical strength, smooth surface finish, and dimensional accuracy.
+                    </motion.p>
+                   
+                </motion.div>
+
+              
             </motion.div>
         </div>
     );
 };
 
-export default IgnotsSecond;
+export default Billets;

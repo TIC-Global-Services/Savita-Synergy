@@ -60,7 +60,7 @@ const ApplicationOfBillets = () => {
           Applications of  <span className="text-lighter">Aluminum Billets</span>
         </h1>
       </motion.div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto">
         {DieContent.map((item, index) => (
           <motion.div
             key={index}
