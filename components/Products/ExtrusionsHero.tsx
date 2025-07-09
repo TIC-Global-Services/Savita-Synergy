@@ -15,7 +15,7 @@ const ExtrusionHero: React.FC = () => {
   const scale = isMobile ? 1 : scaleTransform;
 
   return (
-    <section className="relative w-full h-screen flex items-center justify-center overflow-hidden z-50">
+    <section className="relative w-full h-[70dvh] flex items-center justify-center overflow-hidden z-50">
       <motion.div
         style={{ y, scale }}
         initial={{ scale: 1.1, opacity: 0 }}
@@ -41,7 +41,7 @@ const ExtrusionHero: React.FC = () => {
         initial={{ opacity: 0, y: 80 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1], delay: 0.4 }}
-        className="absolute left-3 sm:left-5 md:left-6 lg:left-10 top-1/2 -translate-y-1/2 z-10 text-left text-white px-3 sm:px-5 md:px-6 lg:px-8"
+        className="absolute left-3 sm:left-5 md:left-6 lg:left-10 bottom-10 -translate-y-1/2 z-10 text-left text-white px-3 sm:px-5 md:px-6 lg:px-8"
       >
         <motion.h1
           initial={{ opacity: 0, x: -60 }}

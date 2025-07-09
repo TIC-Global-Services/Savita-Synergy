@@ -1,158 +1,113 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import Aluminium from '@/assets/Product/Aluminium.png';
-import Extrusion from '@/assets/Product/Extrusion.png';
-import CustomDies from '@/assets/Product/CustomDies.png';
-import Ignots from '@/assets/Product/Ignots.png';
+import React from 'react';
+import Aluminium from '@/assets/Product/aluminum-scrap.png';
+import Extrusion from '@/assets/Product/extrusion-profiles.png';
+import CustomDies from '@/assets/Product/custom-dies.png';
+import Ignots from '@/assets/Product/ignots.png';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ArrowRightIcon } from 'lucide-react';
+import { motion, type Variants } from 'framer-motion';
 
 const ProductExplore = () => {
   const Products = [
     {
-      name: 'Aluminum Scrap',
-      desc: 'We source and supply high-quality aluminum scrap suitable for recycling and manufacturing, ensuring consistent material quality for industrial use.',
-      img: Aluminium,
-      catalogue: '/catelogues/aluminium.pdf',
+      name: 'Extrusions & Profiles',
+      slug: 'extrusions-and-profiles',
+      img: Extrusion,
     },
     {
       name: 'Ignots & Billets',
-      desc: 'Our aluminum ingots and billets are produced to exacting standards, ideal for further processing in casting, rolling, and extrusion applications.',
+      slug: 'ignots-and-billets',
       img: Ignots,
-      catalogue: '/catelogues/ignots.pdf',
     },
     {
-      name: 'Extrusions & Profiles',
-      desc: 'We offer a wide range of extruded aluminum profiles in various shapes and grades, tailored for use in construction, automotive, and industrial projects.',
-      img: Extrusion,
-      catalogue: '/catelogues/extrusion.pdf',
-      sublinks: [
-        { title: 'Structural', link: '/products/extrusions-and-profiles' },
-        { title: 'Architectural', link: '/products/extrusions-and-profiles' },
-      ],
+      name: 'Aluminum Scrap',
+      slug: 'aluminum-scrap',
+      img: Aluminium,
     },
     {
       name: 'Custom Dies',
-      desc: 'We design and manufacture custom dies as per client specifications, enabling precision and flexibility in aluminum profile production.',
+      slug: 'custom-dies',
       img: CustomDies,
-      catalogue: '/catelogues/customdies.pdf',
     },
   ];
 
-  // State to track the currently visible product's catalogue
-  const [activeCatalogue, setActiveCatalogue] = useState({
-    href: Products[0].catalogue,
-    name: Products[0].name,
-  });
-
-  // Refs for each product card
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Find the entry with the highest intersection ratio
-        const mostVisible = entries.reduce((prev, curr) => {
-          return curr.intersectionRatio > prev.intersectionRatio ? curr : prev;
-        }, entries[0]);
-        if (mostVisible.isIntersecting) {
-          const index = Number(
-            (mostVisible.target as HTMLElement).dataset.index
-          );
-          setActiveCatalogue({
-            href: Products[index].catalogue,
-            name: Products[index].name,
-          });
-        }
+  // Animation variants for the product cards
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: (index: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: index * 0.2,
+        duration: 0.5,
+        ease: 'easeOut',
       },
-      {
-        threshold: [0.5], // Trigger when 50% of the card is visible
-        rootMargin: '0px',
-      }
-    );
-
-    // Observe each card
-    cardRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-
-    // Cleanup observer on unmount
-    return () => {
-      cardRefs.current.forEach((ref) => {
-        if (ref) observer.unobserve(ref);
-      });
-    };
-  }, []);
+    }),
+    hover: {
+      scale: 1.02,
+      transition: {
+        duration: 0.3,
+        ease: 'easeOut',
+      },
+    },
+  };
 
   return (
-    <div className="px-4 md:px-16 lg:px-20 py-8 sm:py-20 bg-gray-50">
-      <div className="space-y-12 sm:space-y-16 mx-auto ">
+    <div className="px-4 md:px-16 lg:px-20 py-8 sm:py-20 ">
+      <div className="text-center mb-10">
+        <motion.h1
+          className="text-3xl sm:text-4xl font-bold"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Aluminium Product Manufacturer and Supplier
+        </motion.h1>
+        <motion.div
+          className="text-lg max-w-5xl mx-auto py-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          <p>
+            Savita Synergy is a leading aluminium product manufacturer in India, serving diverse industries with excellence for over a decade. As a trusted aluminium supplier, we offer a wide range of precision-engineered solutions, crafted to meet the highest quality standards. Our offerings include custom aluminium extrusion, aluminium profiles, and components, such as bars, rods, pipes, tubes, and sheets — all designed for durability and performance in both structural and decorative applications.
+          </p>
+          <p className="mt-4">
+            With a strong focus on reliability and innovation, Savita Synergy is committed to delivering corrosion-resistant aluminium solutions that are also eco-friendly and built for long-term use. Whether for industrial, architectural, or commercial needs, we are your trusted partner for sustainable aluminium products in India.
+          </p>
+        </motion.div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
         {Products.map((product, index) => (
-          <div
+          <motion.div
             key={index}
-            ref={(el) => {
-              cardRefs.current[index] = el;
-            }}
             data-index={index}
-            className="relative overflow-hidden transition-all duration-300"
+            className="relative overflow-hidden rounded-2xl"
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            whileHover="hover"
+            custom={index}
           >
-            {/* Heading */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold z-10 py-4 sm:py-6">
-              {product.name}
-            </h1>
             {/* Product Card */}
-            <div className="relative w-full group">
+            <Link href={`/products/${product.slug}`} className="block w-full h-full bg-synergy-dark-300 rounded-2xl p-6">
               <Image
                 src={product.img}
                 alt={`${product.name} product image`}
-                className="object-cover w-full aspect-[3/4] sm:aspect-[16/6] transition duration-500 group-hover:brightness-50 rounded-2xl group-hover:scale-102"
+                className="object-cover aspect-square w-full rounded-xl"
                 priority={index === 0}
               />
-              {/* Overlay Description and Sublinks */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 p-4 sm:p-6 rounded-2xl group-hover:scale-102 bg-black/50">
-                <p className="text-sm sm:text-base md:text-lg font-medium mb-3 sm:mb-4 max-w-3xl">
-                  {product.desc}
-                </p>
-                {/* Sublink Buttons */}
-                {product.sublinks && (
-                  <div className="flex gap-2 sm:gap-3 flex-wrap">
-                    {product.sublinks.map((sublink, subIdx) => (
-                      <Link
-                        key={subIdx}
-                        href={sublink.link}
-                        className=" underline text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full font-semibold text-xs sm:text-lg transition-transform duration-300 hover:scale-105"
-                      >
-                        {sublink.title}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-
-                <div className=' pt-4'>
-                  <Link
-                    href="/contact"
-                    className="px-4 py-2 bg-lighter text-lg text-white rounded-full hover:bg-primary transition-colors"
-                  >
-                    Contact
-                  </Link>
-                </div>
+              <div className="flex items-center gap-2 mt-4 text-lighter">
+                <h2 className="text-xl sm:text-2xl">{product.name}</h2>
+                <ArrowRightIcon className="w-4 h-4" />
               </div>
-            </div>
-          </div>
+            </Link>
+          </motion.div>
         ))}
       </div>
-      {/* Fixed Download Button */}
-      <Link
-        href={activeCatalogue.href}
-        target="_blank"
-        download
-        rel="noopener noreferrer"
-        aria-label={`Download catalogue for ${activeCatalogue.name}`}
-        className="fixed -right-16 md:-right-20 top-1/2 -translate-y-1/2 rotate-[-90deg] bg-lighter text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-t-sm font-semibold text-xs sm:text-sm  hover:bg-primary transition-transform duration-300 hover:scale-105 whitespace-nowrap z-30"
-      >
-        Download Catalogue
-      </Link>
     </div>
   );
 };
