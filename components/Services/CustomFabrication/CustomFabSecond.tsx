@@ -58,7 +58,7 @@ const CustomFabSecond = () => {
                         className="text-lg md:text-xl text-gray-600 leading-relaxed"
                         variants={textVariants}
                     >
-                       Whether you're prototyping a new product or scaling up for production, our fabrication unit delivers aluminium parts that are ready for assembly, installation, or further processing. We work closely with clients to meet tight tolerances, unique shapes, and special design requirements.
+                       Whether you&apos;re prototyping a new product or scaling up for production, our fabrication unit delivers aluminium parts that are ready for assembly, installation, or further processing. We work closely with clients to meet tight tolerances, unique shapes, and special design requirements.
                     </motion.p>
                    
                 </motion.div>

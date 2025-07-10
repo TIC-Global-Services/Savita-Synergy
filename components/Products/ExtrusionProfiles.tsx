@@ -82,7 +82,7 @@ const ExtrusionProfiles: React.FC = () => {
 
                     <p>Our aluminium profiles are manufactured using high-grade raw and recycled materials, making them strong, durable, and environmentally responsible. With a wide variety of custom aluminium sections in different shapes, sizes, and finishes, we cater to the unique needs of architects, builders, and industrial clients across the country.</p>
 
-                    <p>Whether you're designing modern facades or durable framing systems, Savita Synergy delivers performance-driven, versatile solutions tailored to your project. Looking for a reliable aluminium Extrusion profile supplier in India? Choose Savita Synergy for purity, performance, and production-ready material.</p>
+                    <p>Whether you&apos;re designing modern facades or durable framing systems, Savita Synergy delivers performance-driven, versatile solutions tailored to your project.Looking for a reliable aluminium Extrusion profile supplier in India? Choose Savita Synergy for purity, performance, and production-ready material.</p>
                 </div>
 
                 <div className='flex justify-center items-center'>
