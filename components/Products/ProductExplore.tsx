@@ -4,7 +4,7 @@ import React from 'react';
 import Aluminium from '@/assets/Product/aluminum-scrap.png';
 import Extrusion from '@/assets/Product/extrusion-profiles.png';
 import CustomDies from '@/assets/Product/custom-dies.png';
-import Ignots from '@/assets/Product/ignots.png';
+import Ignots from '@/assets/Product/Ignots.png';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRightIcon } from 'lucide-react';
