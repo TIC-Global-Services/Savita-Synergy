@@ -70,7 +70,21 @@ const WhyAnodizing = () => {
                         <li className=' flex items-center gap-2'> <span className=' text-lighter'><MdCheckCircle /> </span> A lightweight, cost-effective alternative to other metal finishes</li>
                         <li className=' flex items-center gap-2'> <span className=' text-lighter'><MdCheckCircle /> </span> Eco-friendly, low maintenance, and fully recyclable</li>
                     </ol>
-                    
+
+                    <div className="flex justify-start">
+                        <motion.div
+                            variants={buttonVariants}
+                            whileHover="hover"
+                        >
+                            <Link
+                                href="/contact"
+                                className="inline-block px-6 py-3 bg-lighter text-white text-lg font-semibold rounded-full hover:bg-primary transition-colors duration-300"
+                            >
+                                Get Quotation
+                            </Link>
+                        </motion.div>
+                    </div>
+
                 </motion.div>
 
 

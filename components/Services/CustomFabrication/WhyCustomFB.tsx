@@ -4,6 +4,7 @@ import { motion, type Variants } from 'framer-motion';
 import Image from 'next/image';
 import WhyPC from '@/assets/Services/PowderCoating/why-pc.jpg'
 import { MdCheckCircle } from 'react-icons/md';
+import Link from 'next/link';
 
 const WhyCustomFab = () => {
 
@@ -70,6 +71,20 @@ const WhyCustomFab = () => {
                     </ol>
 
                 </motion.div>
+
+                <div className="flex justify-start">
+                    <motion.div
+                        variants={buttonVariants}
+                        whileHover="hover"
+                    >
+                        <Link
+                            href="/contact"
+                            className="inline-block px-6 py-3 bg-lighter text-white text-lg font-semibold rounded-full hover:bg-primary transition-colors duration-300"
+                        >
+                            Get Quotation
+                        </Link>
+                    </motion.div>
+                </div>
 
 
             </div>

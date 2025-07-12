@@ -7,6 +7,7 @@ import Aluminum from '@/assets/KnowledgeHub/Blogs/aluminum.png';
 import Company from '@/assets/KnowledgeHub/Blogs/company.png';
 import Market from '@/assets/KnowledgeHub/Blogs/market.png';
 import Expert from '@/assets/KnowledgeHub/Blogs/expert.png';
+import blogData from '@/data/BlogData';
 
 interface BlogItem {
   id: string;
@@ -54,32 +55,7 @@ const itemVariants: Variants = {
 const Blogs: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-  const blogsContent: BlogItem[] = [
-    {
-      id: 'history-of-aluminum',
-      title: 'History of Aluminum',
-      img: Aluminum,
-      link: '/blogs/the-aluminum-journey-in-india',
-    },
-    {
-      id: 'expertise-based-articles',
-      title: 'Expertise-Based Articles',
-      img: Expert,
-      link: '',
-    },
-    {
-      id: 'company-viewpoints',
-      title: 'Company Viewpoints',
-      img: Company,
-      link: '',
-    },
-    {
-      id: 'market-analysis',
-      title: 'Market Analysis',
-      img: Market,
-      link: '',
-    },
-  ];
+ 
 
   return (
     <section className="py-12 px-4 sm:px-6 lg:px-20 bg-gray-50">
@@ -109,16 +85,16 @@ const Blogs: React.FC = () => {
           <motion.div
             variants={itemVariants}
             className="  overflow-hidden cursor-pointer"
-            onHoverStart={() => setHoveredId(blogsContent[0].id)}
+            onHoverStart={() => setHoveredId(blogData[0].id)}
             onHoverEnd={() => setHoveredId(null)}
             whileHover={{ scale: 1.02 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           >
-            <Link href={blogsContent[0].link} className="block">
+            <Link href={`blogs/${blogData[0].slug}`} className="block">
               <div className="relative h-64 sm:h-80 ">
                 <Image
-                  src={blogsContent[0].img}
-                  alt={blogsContent[0].title}
+                  src={blogData[0].blogImage}
+                  alt={blogData[0].title}
                   fill
                   className="object-cover transition-all duration-300 rounded-2xl "
                   sizes="100vw"
@@ -132,7 +108,7 @@ const Blogs: React.FC = () => {
               </div>
               <div className=' py-2'>
                 <h2 className="text-gray-900 text-sm sm:text-lg">
-                  {blogsContent[0].title}
+                  {blogData[0].title}
                 </h2>
               </div>
             </Link>
@@ -140,7 +116,7 @@ const Blogs: React.FC = () => {
 
           {/* 3-Column Smaller Blog Items */}
           <div className="grid grid-cols-3 gap-4">
-            {blogsContent.slice(1).map((item) => (
+            {blogData.slice(1).map((item) => (
               <motion.div
                 key={item.id}
                 variants={itemVariants}
@@ -150,10 +126,10 @@ const Blogs: React.FC = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
               >
-                <Link href={item.link} className="block">
+                <Link href={`blogs/${item.slug}`} className="block">
                   <div className="relative h-36 sm:h-48">
                     <Image
-                      src={item.img}
+                      src={item.blogImage}
                       alt={item.title}
                       fill
                       className="object-cover transition-all duration-300 rounded-2xl"

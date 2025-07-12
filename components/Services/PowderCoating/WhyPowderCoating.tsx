@@ -4,6 +4,7 @@ import { motion, type Variants } from 'framer-motion';
 import Image from 'next/image';
 import WhyPC from '@/assets/Services/PowderCoating/why-pc.jpg'
 import { MdCheckCircle } from 'react-icons/md';
+import Link from 'next/link';
 
 const WhyPowderCoating = () => {
 
@@ -69,6 +70,19 @@ const WhyPowderCoating = () => {
                         <li className=' flex items-center gap-2'> <span className=' text-lighter'><MdCheckCircle /> </span> Environmentally responsible process with minimal VOC emissions</li>
                         <li className=' flex items-center gap-2'> <span className=' text-lighter'><MdCheckCircle /> </span> Perfect for architectural aluminium finishes, building facades, and industrial components</li>
                     </ol>
+                    <div className="flex justify-start">
+                        <motion.div
+                            variants={buttonVariants}
+                            whileHover="hover"
+                        >
+                            <Link
+                                href="/contact"
+                                className="inline-block px-6 py-3 bg-lighter text-white text-lg font-semibold rounded-full hover:bg-primary transition-colors duration-300"
+                            >
+                                Get Quotation
+                            </Link>
+                        </motion.div>
+                    </div>
 
                 </motion.div>
 
