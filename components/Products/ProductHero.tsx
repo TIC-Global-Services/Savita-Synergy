@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import ProductHeroImg from '@/assets/Product/ProductHeroBG.png';
+import ProductHeroImg from '@/assets/Product/ProductHeroBG.jpg';
 
 const ProductHero: React.FC = () => {
   const { scrollY } = useScroll();

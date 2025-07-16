@@ -2,15 +2,15 @@
 import React from 'react';
 import { motion, type Variants } from 'framer-motion';
 import Image, { StaticImageData } from 'next/image';
-import SlidingWindow from '@/assets/Product/Extrusions/Architectural/angles.png';
-import HandleSections from '@/assets/Product/Extrusions/Architectural/angles.png';
-import Skirtings from '@/assets/Product/Extrusions/Architectural/angles.png';
-import KitchenProfiles from '@/assets/Product/Extrusions/Architectural/angles.png';
-import WindowSeries from '@/assets/Product/Extrusions/Architectural/angles.png';
-import Slidings from '@/assets/Product/Extrusions/Architectural/angles.png';
-import CasementSections from '@/assets/Product/Extrusions/Architectural/angles.png';
-import SingleGlass from '@/assets/Product/Extrusions/Architectural/angles.png';
-import TrackCapSystem from '@/assets/Product/Extrusions/Architectural/angles.png';
+import SlidingWindow from '@/assets/Product/Extrusions/Architectural/Sliding Window Sections.jpg';
+import HandleSections from '@/assets/Product/Extrusions/Architectural/Handle Section.jpg';
+import Skirtings from '@/assets/Product/Extrusions/Architectural/Skirting.jpg';
+import KitchenProfiles from '@/assets/Product/Extrusions/Architectural/Kitchen Profile.jpg';
+import WindowSeries from '@/assets/Product/Extrusions/Architectural/2054.jpg';
+import Slidings from '@/assets/Product/Extrusions/Architectural/50-mm-Sliding.jpg';
+import CasementSections from '@/assets/Product/Extrusions/Architectural/casement-sections.jpg';
+import SingleGlass from '@/assets/Product/Extrusions/Architectural/30-X60mm.jpg';
+import TrackCapSystem from '@/assets/Product/Extrusions/Architectural/30-MM.jpg';
 import Link from 'next/link';
 
 interface Profile {

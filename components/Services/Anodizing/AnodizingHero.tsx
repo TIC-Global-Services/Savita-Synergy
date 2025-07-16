@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import AnodizingHeroImg from '@/assets/Services/Banner/anodizing.png'
+import AnodizingHeroImg from '@/assets/Services/Anodizing.jpg'
 
 const AnodizingHero: React.FC = () => {
   const { scrollY } = useScroll();

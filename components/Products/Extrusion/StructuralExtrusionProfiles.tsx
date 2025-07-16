@@ -1,12 +1,12 @@
 'use client'
 import Image, { StaticImageData } from 'next/image';
 import React from 'react'
-import Bars from '@/assets/Product/Extrusions/Structural/bars.png';
-import Tubes from '@/assets/Product/Extrusions/Structural/tubes.png';
-import Channels from '@/assets/Product/Extrusions/Structural/channels.png';
+import Bars from '@/assets/Product/Extrusions/Structural/bars.jpg';
+import Tubes from '@/assets/Product/Extrusions/Structural/tubes.jpg';
+import Channels from '@/assets/Product/Extrusions/Structural/channels.jpg';
 import Angles from '@/assets/Product/Extrusions/Structural/angles.png';
-import Tees from '@/assets/Product/Extrusions/Structural/tees.png';
-import DoorSections from '@/assets/Product/Extrusions/Structural/door.png';
+import Tees from '@/assets/Product/Extrusions/Structural/tees.jpg';
+import DoorSections from '@/assets/Product/Extrusions/Structural/door.jpg';
 import { motion, type Variants } from 'framer-motion';
 import Link from 'next/link';
 

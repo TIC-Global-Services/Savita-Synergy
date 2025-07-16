@@ -4,9 +4,9 @@ import React from 'react';
 import Image from 'next/image';
 import AluminumExtrusion from '@/assets/Product/Ignots/aluminum-extrusion-profile.jpg';
 import DieCasting from '@/assets/Product/Ignots/die-casting.jpg';
-import ConductiveBars from '@/assets/Product/Ignots/conductive-bars.jpg';
+import ConductiveBars from '@/assets/Product/Ignots/conductive-bars.png';
 import ForgedMachines from '@/assets/Product/Ignots/forged-and-machines.jpg';
-import RolledSheets from '@/assets/Product/Ignots/conductive-bars.jpg'; // Added new image import
+import RolledSheets from '@/assets/Product/Ignots/rolled-sheets.jpg'; // Added new image import
 
 const ApplicationMain = () => {
     const content = [

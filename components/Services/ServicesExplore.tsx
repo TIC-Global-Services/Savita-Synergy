@@ -3,7 +3,7 @@ import React from 'react';
 import { motion, type Variants } from 'framer-motion';
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
-import Anodizing from '@/assets/Services/Anodizing.png';
+import Anodizing from '@/assets/Services/Anodizing.jpg';
 import PowerCoating from '@/assets/Services/PowerCoating.png';
 import CustomFabrication from '@/assets/Services/CustomFabrication.png';
 

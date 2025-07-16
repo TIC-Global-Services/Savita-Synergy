@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import ProductHeroImg from '@/assets/Product/ProductHeroBG.png';
+import ExtrusionHeroImg from '@/assets/Product/Extrusions/ExtrusionHeroBG.jpg';
 
 const ExtrusionHero: React.FC = () => {
   const { scrollY } = useScroll();
@@ -24,7 +24,7 @@ const ExtrusionHero: React.FC = () => {
         className="absolute w-full h-full"
       >
         <Image
-          src={ProductHeroImg}
+          src={ExtrusionHeroImg}
           alt="Product Hero Background"
           fill
           className="object-cover object-center"

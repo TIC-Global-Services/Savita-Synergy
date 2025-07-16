@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import React from 'react';
-import WeightAccuracy from '@/assets/Product/Scraps/weight-accuracy.jpg';
+import WeightAccuracy from '@/assets/Product/Scraps/weight-accuracy.png';
 import Purity from '@/assets/Product/Scraps/purity.jpg';
 import ZeroMess from '@/assets/Product/Scraps/zero-mess.jpg';
 import { motion, type Variants } from 'framer-motion';

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import AboutHeroImg from '@/assets/About/AboutHero-BG.png';
+import AboutHeroImg from '@/assets/About/AboutHero-BG.jpg';
 
 const AboutHero: React.FC = () => {
   const { scrollY } = useScroll();

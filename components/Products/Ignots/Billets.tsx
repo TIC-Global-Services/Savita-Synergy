@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import React from 'react';
-import CustomDiesQuoteImg from '@/assets/Product/CustomDies/CustomDiesQuote.jpg';
+import BilletsImg from '@/assets/Product/Ignots/Billets.jpg';
 import { motion, type Variants } from 'framer-motion';
 
 // Animation variants for text with staggered children
@@ -55,7 +55,7 @@ const Billets = () => {
                     whileHover="hover"
                 >
                     <Image
-                        src={CustomDiesQuoteImg}
+                        src={BilletsImg}
                         alt="Custom Aluminium Extrusion Dies"
                         className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500"
                         width={600}

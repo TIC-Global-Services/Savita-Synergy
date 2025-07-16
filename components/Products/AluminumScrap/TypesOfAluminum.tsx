@@ -3,7 +3,9 @@ import React from 'react'
 import { motion, type Variants } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import WhyCustomDiesImg from '@/assets/Product/CustomDies/WhyCustomDies.jpg'
+import Type1Img from '@/assets/Product/Scraps/types/1.png'
+import Type2Img from '@/assets/Product/Scraps/types/2.png'
+import Type3Img from '@/assets/Product/Scraps/types/3.png'
 import { MdCheckCircle } from 'react-icons/md';
 
 const TypesOfAluminum = () => {
@@ -33,15 +35,31 @@ const TypesOfAluminum = () => {
 
                 {/* Image */}
                 <motion.div
-                    className="w-full"
+                    className="w-full space-y-6"
                     initial="hidden"
                     animate="visible"
                     variants={imageVariants}
                 >
                     <Image
-                        src={WhyCustomDiesImg}
-                        alt="Why Custom Dies"
-                        className="rounded-2xl w-full h-[90dvh] object-cover"
+                        src={Type1Img}
+                        alt="Aluminum Type"
+                        className="rounded-2xl w-full object-cover aspect-[16/4]"
+                        width={600}
+                        height={400}
+                        priority
+                    />
+                    <Image
+                        src={Type2Img}
+                        alt="Aluminum Type"
+                        className="rounded-2xl w-full  object-cover aspect-[16/4]"
+                        width={600}
+                        height={400}
+                        priority
+                    />
+                    <Image
+                        src={Type3Img}
+                        alt="Aluminum Type"
+                        className="rounded-2xl w-full  object-cover aspect-[16/4]"
                         width={600}
                         height={400}
                         priority
