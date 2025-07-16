@@ -1,185 +1,296 @@
-'use client'
-import React, { useEffect, useRef } from 'react';
-import Lenis from '@studio-freight/lenis';
+'use client';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { motion, AnimatePresence } from 'framer-motion';
+import { DigitalDisplayBoard } from './DigitalDisplayBoard';
 
+// Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
 
-interface Video {
-  id: number;
-  src: string;
-  text: string;
+
+
+
+type StaticContentProps = {
+  title: string;
+  desc?: string;
+  button?: string;
+  position?: string;
+};
+
+interface StaticContentMap {
+  [key: number]: StaticContentProps;
 }
 
-const videoFiles: Video[] = [
-  { id: 1, src: '/Tour/1.mp4', text: 'Who We Are' },
-  { id: 2, src: '/Tour/2.mp4', text: 'What We Do' },
-  { id: 3, src: '/Tour/3.mp4', text: 'Aluminum Scrap' },
-  { id: 4, src: '/Tour/4.mp4', text: 'Ingots and Billets' },
-  { id: 5, src: '/Tour/5.mp4', text: 'Extrusions' },
-  { id: 6, src: '/Tour/6.mp4', text: 'Custom Dies' },
-  { id: 7, src: '/Tour/7.mp4', text: 'Aluminum Services' },
-  { id: 8, src: '/Tour/8.mp4', text: 'Anodizing' },
-  { id: 9, src: '/Tour/9.mp4', text: 'Powder Coating' },
-  { id: 10, src: '/Tour/10.mp4', text: 'Fabrication' },
-  { id: 11, src: '/Tour/11.mp4', text: 'Contact Us' },
-  { id: 12, src: '/Tour/12.mp4', text: 'Form' },
-];
+const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({ 
+  title, 
+  desc, 
+  button, 
+  position, 
+  isVisible 
+}) => {
+  return (
+    <AnimatePresence mode="wait">
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ 
+            duration: 0.3,
+            ease: "easeInOut"
+          }}
+          className={`absolute text-white p-4 rounded ${position}`}
+        >
+          <h2 className="text-3xl mb-2 font-bold">{title}</h2>
+          
+          {desc && (
+            <p className="text-base mb-2">{desc}</p>
+          )}
+          
+          {button && (
+            <motion.button 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.15 }}
+              className="block text-center px-6 py-2 bg-lighter rounded-full hover:bg-gray-300 transition-colors"
+            >
+              {button}
+            </motion.button>
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
 
-const FactoryTour: React.FC = () => {
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-  const textRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const containerRef = useRef<HTMLDivElement>(null);
+// Content mapping for static videos
+const staticContent: StaticContentMap = {
+  0: {
+    // Frame 1
+    title: 'Introduction',
+    desc: 'Welcome to our factory tour, showcasing our innovative processes.',
+    button: 'Learn More',
+    position: 'bottom-10 left-10',
+  },
+  2: {
+    // Frame 3
+    title: 'Who Are We',
+    desc: 'At Savita Synergy, we offer end-to-end aluminum solutions — from aluminum scrap to finished products. As a leading aluminum trading and manufacturing company in India, we serve diverse industries with reliable processing, finishing, and distribution services. With facilities like AL13 Metal and HPG Coaters, and a presence across major cities, we deliver quality, consistency, and service at every step.',
+    button: 'Our Story',
+    position: ' top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+  },
+  4: {
+    // Frame 5
+    title: 'What We Do',
+    desc: 'We offer a diverse range of aluminum products including high-quality aluminum scrap for recycling, precision-grade ingots and billets for casting and extrusion, and versatile extruded profiles for construction, automotive, and industrial applications. We also design and manufacture custom dies to meet specific client requirements with high precision.',
+    position: ' top-20 left-1/2 -translate-x-1/2  justify-start items-start flex flex-col',
+  },
+  6: {
+    // Frame 7
+    title: 'Aluminum Scrap',
+    desc: 'Reliable material for recycling & manufacturing',
+    position: 'top-20 left-1/3 -translate-x-1/2  justify-start items-start flex flex-col',
+  },
+  8: {
+    // Frame 9
+    title: 'Ingots and Billets',
+    desc: 'Precision-grade metals for casting & extrusion.',
+    position: 'top-40 left-20',
+  },
+  10: {
+    // Frame 11
+    title: 'Extrusions',
+    desc: 'Versatile profiles for industrial applications.',
+    button: 'Explore More',
+    position: 'top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2  ',
+  },
+  12: {
+    // Frame 13
+    title: 'Custom Dies',
+    desc: 'Engineered dies tailored to your needs',
+    position: 'top-10 left-10',
+  },
+  14: {
+    // Frame 15
+    title: 'Aluminum Services',
+    desc: 'Our value-added services include anodizing for durable, corrosion-resistant finishes and powder coating in a wide variety of colors and textures for enhanced protection. We also provide custom fabrication, cutting, and finishing services, enabling complete, end-to-end aluminum solutions.',
+    position: 'top-10 left-1/2 -translate-x-2/5',
+  },
+  16: {
+    // Frame 17
+    title: 'Anodizing',
+    desc: 'Durable, corrosion-resistant surface finish.',
+    position: 'top-10 left-1/2 -translate-x-1/2',
+  },
+  18: {
+    // Frame 19
+    title: 'Powder Coating',
+    desc: 'Premium textures & colors for aluminum.',
+    position: ' bottom-10 left-10 ',
+  },
+  20: {
+    // Frame 21
+    title: 'Fabrication',
+    desc: 'End-to-end cutting, machining & finishing.',
+    button: 'Explore Services',
+    position: 'bottom-10 left-1/6',
+  },
+  22: {
+    // Frame 23
+    title: 'Contact Us',
+    desc: 'Get in touch with our team for inquiries.',
+    button: 'Contact Now',
+    position: 'top-1/2 left-1/2 -translate-x-1/2',
+  },
+  24: {
+    // Frame 25
+    title: 'Form',
+    desc: 'Submit your details to connect with us.',
+    button: 'Submit Form',
+    position: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+  },
+};
+
+const FactoryTour = () => {
+  const videoRefs = Array.from({ length: 25 }, () => useRef<HTMLVideoElement | null>(null));
+  const sectionRef = useRef(null);
+  const [visibleContent, setVisibleContent] = useState<number | null>(0);
+  const [showDisplayBoard, setShowDisplayBoard] = useState<boolean>(true);
 
   useEffect(() => {
-    // Initialize Lenis for smooth scrolling
-    const lenis = new Lenis({
-      duration: 2.5,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    });
+    const videos = videoRefs.map((ref) => ref.current);
 
-    // Lenis RAF loop
-    function raf(time: number) {
-      lenis.raf(time);
-      ScrollTrigger.update(); // Ensure ScrollTrigger updates with Lenis
-      requestAnimationFrame(raf);
+    // Ensure sectionRef and videos are not null
+    if (!sectionRef.current || videos.some((video) => !video)) {
+      console.error('Section or video refs are not initialized');
+      return;
     }
 
-    requestAnimationFrame(raf);
+    // Set initial state: video1 visible and playing, others hidden
+    gsap.set(videos.slice(1).filter(Boolean), { autoAlpha: 0 });
+    const firstVideo = videos[0] as HTMLVideoElement | null;
+    if (firstVideo) {
+      firstVideo.loop = true;
+      firstVideo.play().catch((error: unknown) => {
+        console.error('Error playing first video:', error);
+      });
+    }
 
-    // Wait for all videos to load metadata
-    const loadVideos = Promise.all(
-      videoRefs.current.map((video) =>
-        video
-          ? new Promise((resolve) => {
-              video.onloadedmetadata = () => resolve(video);
-              video.load(); // Force load the video
-            })
-          : Promise.resolve(null),
-      ),
-    );
+    // Helper function to pause all videos except the active one
+    const pauseOtherVideos = (activeIndex: number) => {
+      videos.forEach((video, idx) => {
+        if (video && idx !== activeIndex && !video.paused) {
+          video.pause();
+          video.loop = false;
+        }
+      });
+    };
 
-    loadVideos.then(() => {
-      console.log('All videos loaded');
-      const ctx = gsap.context(() => {
-        videoFiles.forEach((video, index) => {
-          const videoElement = videoRefs.current[index];
-          const textElement = textRefs.current[index];
+    // Create ScrollTrigger for video and content transitions
+    ScrollTrigger.create({
+      trigger: sectionRef.current,
+      start: 'top top',
+      end: '+=4800%',
+      pin: true,
+      scrub: 0.5,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const segment = 1 / 24; // 24 transitions for 25 videos
 
-          if (videoElement && textElement) {
-            // Set initial state
-            gsap.set(videoElement, { opacity: index === 0 ? 1 : 0 });
-            gsap.set(textElement, { opacity: index === 0 ? 1 : 0 });
+        for (let i = 0; i < 25; i++) {
+          const isTransition = i % 2 === 1; // Transition videos: 1,3,5,7,9,11,13,15,17,19,21,23 | Static videos: 0,2,4,6,8,10,12,14,16,18,20,22,24
+          const startProgress = i * segment;
+          const endProgress = (i + 1) * segment;
 
-            const duration = videoElement.duration || 5; // Fallback duration
-            const sectionHeight = window.innerHeight * 1.5;
+          if (progress >= startProgress && progress < endProgress) {
+            // Handle video visibility and playback
+            if (videos[i]) {
+              gsap.set(videos[i], { autoAlpha: 1 });
+              gsap.set(videos.filter((v, idx) => idx !== i && v), { autoAlpha: 0 });
 
-            // Create ScrollTrigger for each video
-            ScrollTrigger.create({
-              trigger: containerRef.current,
-              start: `top+=${index * sectionHeight} top`,
-              end: `top+=${(index + 1) * sectionHeight} top`,
-              scrub: 0.5,
-              onEnter: () => {
-                console.log(`Playing video ${index + 1}: ${video.text}`);
-                videoElement
-                  .play()
-                  .catch((err) => console.error(`Play error for video ${index + 1}:`, err));
-                gsap.to(videoElement, { opacity: 1, duration: 0.5, ease: 'power2.in' });
-                gsap.to(textElement, { opacity: 1, duration: 0.5, ease: 'power2.in' });
-                // Fade out other videos and texts
-                videoRefs.current.forEach((otherVideo, otherIndex) => {
-                  if (otherIndex !== index && otherVideo) {
-                    gsap.to(otherVideo, { opacity: 0, duration: 0.5, ease: 'power2.out' });
-                    otherVideo.pause();
-                    otherVideo.currentTime = 0;
+              if (isTransition) {
+                // Transition video: control timeline
+                const video = videos[i];
+                if (video) {
+                  const videoDuration = video.duration || 10;
+                  const adjustedProgress = (progress - startProgress) / segment;
+                  video.currentTime = adjustedProgress * videoDuration;
+                  video.loop = false;
+                  if (!video.paused) {
+                    video.pause();
                   }
-                });
-                textRefs.current.forEach((otherText, otherIndex) => {
-                  if (otherIndex !== index && otherText) {
-                    gsap.to(otherText, { opacity: 0, duration: 0.5, ease: 'power2.out' });
-                  }
-                });
-              },
-              onLeave: () => {
-                console.log(`Pausing video ${index + 1}: ${video.text}`);
-                videoElement.pause();
-                videoElement.currentTime = 0;
-                gsap.to(videoElement, { opacity: 0, duration: 0.5, ease: 'power2.out' });
-                gsap.to(textElement, { opacity: 0, duration: 0.5, ease: 'power2.out' });
-              },
-              onEnterBack: () => {
-                console.log(`Playing video ${index + 1} (back): ${video.text}`);
-                videoElement
-                  .play()
-                  .catch((err) => console.error(`Play error for video ${index + 1}:`, err));
-                gsap.to(videoElement, { opacity: 1, duration: 0.5, ease: 'power2.in' });
-                gsap.to(textElement, { opacity: 1, duration: 0.5, ease: 'power2.in' });
-              },
-              onLeaveBack: () => {
-                console.log(`Pausing video ${index + 1} (back): ${video.text}`);
-                videoElement.pause();
-                videoElement.currentTime = 0;
-                gsap.to(videoElement, { opacity: 0, duration: 0.5, ease: 'power2.out' });
-                gsap.to(textElement, { opacity: 0, duration: 0.5, ease: 'power2.out' });
-              },
-              onUpdate: (self) => {
-                const progress = self.progress;
-                videoElement.currentTime = progress * duration;
-              },
-            });
+                }
+              } else {
+                // Static video: play with loop
+                const video = videos[i];
+                if (video && video.paused) {
+                  video.loop = true;
+                  video.play().catch((error) => {
+                    console.error(`Error playing video ${i + 1}:`, error);
+                  });
+                }
+              }
+            }
+
+            // Handle content visibility for static videos with Framer Motion
+            if (!isTransition && staticContent.hasOwnProperty(i)) {
+              setVisibleContent(i);
+              setShowDisplayBoard(i === 0); // Show display board only on frame 1
+            } else {
+              setVisibleContent(null);
+              setShowDisplayBoard(false);
+            }
+
+            pauseOtherVideos(i);
+            break;
           }
-        });
-
-        // Set container height
-        gsap.set(containerRef.current, {
-          height: `${videoFiles.length * 150}vh`,
-        });
-
-        // Refresh ScrollTrigger after setup
-        ScrollTrigger.refresh();
-      }, containerRef);
-
-      return () => {
-        lenis.destroy();
-        ctx.revert();
-      };
+        }
+      },
     });
 
+    // Cleanup on unmount
     return () => {
-      lenis.destroy();
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);
 
   return (
-    <div ref={containerRef} className="relative">
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        {videoFiles.map((video, index) => (
-          <div key={video.id} className="absolute inset-0">
-            <video
-              ref={(el) => {
-                videoRefs.current[index] = el;
-              }}
-              src={video.src}
-              className="h-full w-full object-cover"
-              muted
-              playsInline
-              preload="auto"
-            />
-            <div
-              ref={(el) => {
-                textRefs.current[index] = el;
-              }}
-              className="absolute bottom-10 left-10 text-white text-4xl font-bold z-10"
-              style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}
-            >
-              {video.text}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    <section ref={sectionRef} className="relative w-full h-screen">
+      {/* Video Background */}
+      {videoRefs.map((ref, index) => (
+        <video
+          key={index}
+          ref={ref}
+          className="absolute top-0 left-0 w-full h-full object-cover"
+          src={`/tour-video-clips/frame ${index + 1}.mp4`}
+          muted
+          playsInline
+          {...(index === 0 ? { loop: true } : {})}
+        />
+      ))}
+
+      {/* Digital Display Board - Only visible on frame 1 */}
+      <DigitalDisplayBoard isVisible={showDisplayBoard} />
+
+      {/* Static Content with Framer Motion Animations */}
+      {Object.entries(staticContent).map(([frameIndex, content]) => {
+        const index = parseInt(frameIndex);
+        // Don't show regular content for frame 1 (index 0) as we show the display board instead
+        if (index === 0) return null;
+        
+        return (
+          <StaticContent
+            key={index}
+            title={content.title}
+            desc={content.desc}
+            button={content.button}
+            position={content.position}
+            isVisible={visibleContent === index}
+          />
+        );
+      })}
+    </section>
   );
 };
 
