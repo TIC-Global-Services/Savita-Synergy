@@ -8,9 +8,6 @@ import { DigitalDisplayBoard } from './DigitalDisplayBoard';
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
 
-
-
-
 type StaticContentProps = {
   title: string;
   desc?: string;
@@ -67,84 +64,71 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
 // Content mapping for static videos
 const staticContent: StaticContentMap = {
   0: {
-    // Frame 1
     title: 'Introduction',
     desc: 'Welcome to our factory tour, showcasing our innovative processes.',
     button: 'Learn More',
     position: 'bottom-10 left-10',
   },
   2: {
-    // Frame 3
     title: 'Who Are We',
     desc: 'At Savita Synergy, we offer end-to-end aluminum solutions — from aluminum scrap to finished products. As a leading aluminum trading and manufacturing company in India, we serve diverse industries with reliable processing, finishing, and distribution services. With facilities like AL13 Metal and HPG Coaters, and a presence across major cities, we deliver quality, consistency, and service at every step.',
     button: 'Our Story',
     position: ' top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
   },
   4: {
-    // Frame 5
     title: 'What We Do',
     desc: 'We offer a diverse range of aluminum products including high-quality aluminum scrap for recycling, precision-grade ingots and billets for casting and extrusion, and versatile extruded profiles for construction, automotive, and industrial applications. We also design and manufacture custom dies to meet specific client requirements with high precision.',
     position: ' top-20 left-1/2 -translate-x-1/2  justify-start items-start flex flex-col',
   },
   6: {
-    // Frame 7
     title: 'Aluminum Scrap',
     desc: 'Reliable material for recycling & manufacturing',
     position: 'top-20 left-1/3 -translate-x-1/2  justify-start items-start flex flex-col',
   },
   8: {
-    // Frame 9
     title: 'Ingots and Billets',
     desc: 'Precision-grade metals for casting & extrusion.',
     position: 'top-40 left-20',
   },
   10: {
-    // Frame 11
     title: 'Extrusions',
     desc: 'Versatile profiles for industrial applications.',
     button: 'Explore More',
     position: 'top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2  ',
   },
   12: {
-    // Frame 13
     title: 'Custom Dies',
     desc: 'Engineered dies tailored to your needs',
     position: 'top-10 left-10',
   },
   14: {
-    // Frame 15
     title: 'Aluminum Services',
     desc: 'Our value-added services include anodizing for durable, corrosion-resistant finishes and powder coating in a wide variety of colors and textures for enhanced protection. We also provide custom fabrication, cutting, and finishing services, enabling complete, end-to-end aluminum solutions.',
     position: 'top-10 left-1/2 -translate-x-2/5',
   },
   16: {
-    // Frame 17
     title: 'Anodizing',
     desc: 'Durable, corrosion-resistant surface finish.',
     position: 'top-10 left-1/2 -translate-x-1/2',
   },
   18: {
-    // Frame 19
     title: 'Powder Coating',
     desc: 'Premium textures & colors for aluminum.',
     position: ' bottom-10 left-10 ',
   },
   20: {
-    // Frame 21
     title: 'Fabrication',
     desc: 'End-to-end cutting, machining & finishing.',
     button: 'Explore Services',
     position: 'bottom-10 left-1/6',
   },
   22: {
-    // Frame 23
     title: 'Contact Us',
     desc: 'Get in touch with our team for inquiries.',
     button: 'Contact Now',
     position: 'top-1/2 left-1/2 -translate-x-1/2',
   },
   24: {
-    // Frame 25
     title: 'Form',
     desc: 'Submit your details to connect with us.',
     button: 'Submit Form',
@@ -153,13 +137,14 @@ const staticContent: StaticContentMap = {
 };
 
 const FactoryTour = () => {
-  const videoRefs = Array.from({ length: 25 }, () => useRef<HTMLVideoElement | null>(null));
+  // Initialize array of refs at top level
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>(Array(25).fill(null));
   const sectionRef = useRef(null);
   const [visibleContent, setVisibleContent] = useState<number | null>(0);
   const [showDisplayBoard, setShowDisplayBoard] = useState<boolean>(true);
 
   useEffect(() => {
-    const videos = videoRefs.map((ref) => ref.current);
+    const videos = videoRefs.current;
 
     // Ensure sectionRef and videos are not null
     if (!sectionRef.current || videos.some((video) => !video)) {
@@ -253,15 +238,17 @@ const FactoryTour = () => {
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
-  }, []);
+  }, [videoRefs]);
 
   return (
     <section ref={sectionRef} className="relative w-full h-screen">
       {/* Video Background */}
-      {videoRefs.map((ref, index) => (
+      {Array.from({ length: 25 }).map((_, index) => (
         <video
           key={index}
-          ref={ref}
+          ref={(el) => {
+            videoRefs.current[index] = el!;
+          }}
           className="absolute top-0 left-0 w-full h-full object-cover"
           src={`/tour-video-clips/frame ${index + 1}.mp4`}
           muted
