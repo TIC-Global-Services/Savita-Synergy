@@ -58,7 +58,7 @@ export const DigitalDisplayBoard: React.FC<{ isVisible: boolean }> = ({ isVisibl
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 2.5, y: "-200%", transition: { duration: 0.8, ease: "easeIn" } }}
+            exit={{ opacity: 0, scale: 2.5, y: "-150%", transition: { duration: 0.5, ease: "easeIn" } }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/6 w-full max-w-md bg-black text-green-400 font-mono overflow-hidden rounded-lg shadow-2xl border-2 border-green-600"
           >

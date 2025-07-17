@@ -176,9 +176,9 @@ const FactoryTour = () => {
     ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top top',
-      end: '+=4800%',
+      end: '+=1500%',
       pin: true,
-      scrub: 0.5,
+      scrub: 0.2,
       onUpdate: (self) => {
         const progress = self.progress;
         const segment = 1 / 24; // 24 transitions for 25 videos
@@ -199,6 +199,7 @@ const FactoryTour = () => {
                 const video = videos[i];
                 if (video) {
                   const videoDuration = video.duration || 10;
+                  // console.log(videoDuration)
                   const adjustedProgress = (progress - startProgress) / segment;
                   video.currentTime = adjustedProgress * videoDuration;
                   video.loop = false;
@@ -252,6 +253,7 @@ const FactoryTour = () => {
           className="absolute top-0 left-0 w-full h-full object-cover"
           src={`/tour-video-clips/frame ${index + 1}.mp4`}
           muted
+          preload='auto'
           playsInline
           {...(index === 0 ? { loop: true } : {})}
         />
