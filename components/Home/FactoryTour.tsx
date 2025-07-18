@@ -86,19 +86,19 @@ const staticContent: StaticContentMap = {
     position: 'top-20 left-1/3 -translate-x-1/2  justify-start items-start flex flex-col',
   },
   8: {
-    title: 'Ingots and Billets',
-    desc: 'Precision-grade metals for casting & extrusion.',
+    title: 'Scrap Melting',
+    desc: 'Enhancing Quality Through Purity & Precision.',
     position: 'top-40 left-20',
   },
   10: {
-    title: 'Extrusions',
-    desc: 'Versatile profiles for industrial applications.',
+    title: 'Ingots and Billets',
+    desc: 'Quality Ingots & Billets for Precision Profiles',
     button: 'Explore More',
     position: 'top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2  ',
   },
   12: {
-    title: 'Custom Dies',
-    desc: 'Engineered dies tailored to your needs',
+    title: 'Extrusion Process with Custom Dies',
+    desc: 'Precision-Made Profiles Start Here, From Custom Dies to Finished Extrusions.',
     position: 'top-10 left-10',
   },
   14: {
@@ -135,6 +135,35 @@ const staticContent: StaticContentMap = {
     position: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
   },
 };
+
+// Define video public IDs (replace with actual IDs from Cloudinary)
+const videoPublicIds = [
+  'frame_1_n7t142', 
+  'frame_2_tmmfln',
+  'frame_3_zqarir',
+  'frame_4_pahwur',
+  'frame_5_fyeydp',
+  'frame_6_lrhldh',
+  'frame_7_ekvkxp',
+  'frame_8_kqcg9r',
+  'frame_9_s0fiix',
+  'frame_10_cpt363',
+  'frame_11_zltirx',
+  'frame_12_ypduqy',
+  'frame_13_ssjmdk',
+  'frame_14_l9g3is',
+  'frame_15_vxgcuq',
+  'frame_16_q1umul',
+  'frame_17_c2re25',
+  'frame_18_g6qfm3',
+  'frame_19_we8ga1',
+  'frame_20_rq9a7o',
+  'frame_21_xpixex',
+  'frame_22_c3dc50',
+  'frame_23_irpnpf',
+  'frame_24_nzwd2a',
+  'frame_25_znbyzk',
+];
 
 const FactoryTour = () => {
   // Initialize array of refs at top level
@@ -199,7 +228,6 @@ const FactoryTour = () => {
                 const video = videos[i];
                 if (video) {
                   const videoDuration = video.duration || 10;
-                  // console.log(videoDuration)
                   const adjustedProgress = (progress - startProgress) / segment;
                   video.currentTime = adjustedProgress * videoDuration;
                   video.loop = false;
@@ -251,7 +279,7 @@ const FactoryTour = () => {
             videoRefs.current[index] = el!;
           }}
           className="absolute top-0 left-0 w-full h-full object-cover"
-          src={`/tour-video-clips/frame ${index + 1}.mp4`}
+          src={`https://res.cloudinary.com/dxks5qn1d/video/upload/v1752829241/${videoPublicIds[index]}.mp4`}
           muted
           preload='auto'
           playsInline
