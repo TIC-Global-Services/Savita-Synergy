@@ -52,7 +52,7 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{
-            duration: 0.3,
+            duration: 0.2,
             ease: 'easeInOut',
           }}
           className={`absolute text-white p-4 rounded w-full max-w-xl ${position}`}
@@ -64,7 +64,7 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: index < wordsToShow ? 1 : 0 }}
                 transition={{
-                  duration: 0.3,
+                  duration: 0.2,
                   delay: 0,
                 }}
                 className="inline-block mr-1"
@@ -81,7 +81,7 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: index + titleWords.length < wordsToShow ? 1 : 0 }}
                   transition={{
-                    duration: 0.3,
+                    duration: 0.2,
                     delay: 0,
                   }}
                   className="inline-block mr-1"
@@ -96,7 +96,7 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{
-                duration: 0.3,
+                duration: 0.2,
                 delay: 0,
               }}
             >
