@@ -7,6 +7,7 @@ import { FaMapLocationDot as Address } from "react-icons/fa6";
 import { FaChevronDown as ChevronDown } from "react-icons/fa6";
 import toast from 'react-hot-toast';
 import { CustomToast } from '../Reusable/CustomToast';
+import Link from 'next/link';
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -354,17 +355,19 @@ const ContactForm: React.FC = () => {
             <motion.div
                 variants={itemVariants}
             >
-                <div className="space-y-6 flex flex-col md:flex-row text-center md:text-start items-center w-full justify-center md:justify-between max-w-4xl mx-auto my-10">
+                <div className="space-y-6 flex flex-col md:flex-row text-center md:text-start items-center w-full justify-center md:justify-between max-w-5xl mx-auto my-10">
                     <div>
-                        <p className="text-gray-600 text-lg leading-relaxed flex items-start justify-start gap-4"> <Phone size={22} /> +91 98765 43210</p>
+                        <Link href={'tel:+91 9876543210'} className="text-gray-600 text-lg leading-relaxed flex items-start justify-start gap-4"> <Phone size={22} /> +91 98765 43210</Link>
                     </div>
                     <div>
-                        <p className="text-gray-600 text-lg leading-relaxed flex items-start justify-start gap-4"><Mail size={22} /> contact@aluminex.com</p>
+                        <Link href={'mailto:contact@savitasynergy.com'} className="text-gray-600 text-lg leading-relaxed flex items-start justify-start gap-4"><Mail size={22} /> contact@savitasynergy.com</Link>
                     </div>
                     <div>
                         <p className="text-gray-600 text-lg leading-relaxed flex items-start justify-start gap-4">
                             <Address size={22} />
-                            Chennai, India
+                            Plot No. 96, Sector 1A, Khopar Khairane, <br />
+                            Navi Mumbai-400709, <br />
+                            Maharashtra, India
                         </p>
                     </div>
                 </div>
