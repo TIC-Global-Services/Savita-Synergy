@@ -40,16 +40,14 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
             duration: 0.3,
             ease: "easeInOut",
           }}
-          className={`absolute text-white p-2 md:p-4 rounded ${position}`}
+          className={`absolute text-white p-4 rounded w-full max-w-xl ${position}`}
         >
           <h2 className="text-xl md:text-3xl mb-2 font-bold">{title}</h2>
-
           {desc && <p className="text-sm md:text-base mb-4">{desc}</p>}
-
           {linkText && slug && (
             <Link
               href={`/${slug}`}
-              className=" text-center px-6 py-2 bg-lighter rounded-full hover:bg-primary transition-colors"
+              className="text-center px-6 py-2 bg-lighter rounded-full hover:bg-primary transition-colors"
             >
               {linkText}
             </Link>
@@ -84,34 +82,33 @@ const staticContent: StaticContentMap = {
   6: {
     title: 'Aluminum Scrap',
     desc: 'Reliable material for recycling & manufacturing',
-    position: 'top-20 left-1/3 -translate-x-1/2 justify-start items-start flex flex-col',
+    position: 'top-20 md:left-1/3 md:-translate-x-1/2 justify-start items-start flex flex-col',
     linkText: 'Know More',
     slug: 'products/aluminum-scrap'
   },
   8: {
     title: 'Scrap Melting',
     desc: 'Enhancing Quality Through Purity & Precision.',
-    position: 'top-40 left-20',
+    position: ' top-20 md:top-40 md:left-20',
   },
   10: {
     title: 'Ingots and Billets',
     desc: 'Quality Ingots & Billets for Precision Profiles',
     linkText: 'Explore More',
     slug: 'products/ignots-and-billets',
-    position: 'top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2',
+    position: 'top-1/2 md:left-1/3 md:-translate-x-1/2 -translate-y-1/2',
   },
   12: {
     title: 'Extrusion Process with Custom Dies',
     desc: 'Precision-Made Profiles Start Here, From Custom Dies to Finished Extrusions.',
-    position: 'top-10 left-10',
+    position: 'top-10 md:left-10',
     linkText: "Explore More",
     slug: 'products/extrusions-and-profiles'
   },
   14: {
     title: 'Aluminum Services',
     desc: 'Our value-added services include anodizing for durable, corrosion-resistant finishes and powder coating in a wide variety of colors and textures for enhanced protection. We also provide custom fabrication, cutting, and finishing services, enabling complete, end-to-end aluminum solutions.',
-    position: 'top-10 left-1/2 -translate-x-2/5',
-
+    position: 'top-10 md:left-1/2 md:-translate-x-1/2',
   },
   16: {
     title: 'Anodizing',
@@ -123,7 +120,7 @@ const staticContent: StaticContentMap = {
   18: {
     title: 'Powder Coating',
     desc: 'Premium textures & colors for aluminum.',
-    position: 'bottom-10 left-10',
+    position: 'bottom-10 md:left-10',
     linkText: 'Explore More',
     slug: 'services/powder-coating'
   },
@@ -132,7 +129,7 @@ const staticContent: StaticContentMap = {
     desc: 'End-to-end cutting, machining & finishing.',
     linkText: 'Explore Services',
     slug: 'services/custom-fabrication',
-    position: 'bottom-10 left-1/6',
+    position: 'bottom-10 md:left-1/6',
   },
   22: {
     title: 'Contact Us',
@@ -163,7 +160,7 @@ const videoPublicIds = [
   'frame_9_s0fiix',
   'frame_10_cpt363',
   'frame_11_zltirx',
-  'frame_12_ypduqy',
+  'frame_12_wixnxv',
   'frame_13_ssjmdk',
   'frame_14_l9g3is',
   'frame_15_vxgcuq',
@@ -180,20 +177,25 @@ const videoPublicIds = [
 ];
 
 const FactoryTour = () => {
-  // Initialize array of refs at top level
   const videoRefs = useRef<(HTMLVideoElement | null)[]>(Array(25).fill(null));
-  const sectionRef = useRef(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const [visibleContent, setVisibleContent] = useState<number | null>(0);
   const [showDisplayBoard, setShowDisplayBoard] = useState<boolean>(true);
 
   useEffect(() => {
     const videos = videoRefs.current;
 
-    // Ensure sectionRef and videos are not null
     if (!sectionRef.current || videos.some((video) => !video)) {
       console.error('Section or video refs are not initialized');
       return;
     }
+
+    // Preload all videos
+    videos.forEach((video) => {
+      if (video) {
+        video.load();
+      }
+    });
 
     // Set initial state: video1 visible and playing, others hidden
     gsap.set(videos.slice(1).filter(Boolean), { autoAlpha: 0 });
@@ -216,12 +218,12 @@ const FactoryTour = () => {
     };
 
     // Create ScrollTrigger for video and content transitions
-    ScrollTrigger.create({
+    const scrollTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top top',
       end: '+=1800%',
       pin: true,
-      scrub: 0.2,
+      scrub: 1,
       onUpdate: (self) => {
         const progress = self.progress;
         const segment = 1 / 24; // 24 transitions for 25 videos
@@ -279,24 +281,25 @@ const FactoryTour = () => {
 
     // Cleanup on unmount
     return () => {
+      scrollTrigger.kill();
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
-  }, [videoRefs]);
+  }, []);
 
   return (
-    <section ref={sectionRef} className="relative w-full h-screen">
+    <section ref={sectionRef} className="relative w-full h-screen overflow-hidden">
       {/* Video Background */}
       {Array.from({ length: 25 }).map((_, index) => (
         <video
           key={index}
           ref={(el) => {
-            videoRefs.current[index] = el!;
+            videoRefs.current[index] = el;
           }}
           className="absolute top-0 left-0 w-full h-full object-cover"
           src={`https://res.cloudinary.com/dxks5qn1d/video/upload/v1752829241/${videoPublicIds[index]}.mp4`}
           muted
-          preload="auto"
           playsInline
+          preload="auto"
           onContextMenu={(e) => e.preventDefault()}
           {...(index === 0 ? { loop: true } : {})}
         />
