@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DigitalDisplayBoard } from './DigitalDisplayBoard';
+import Link from 'next/link';
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -11,7 +12,8 @@ gsap.registerPlugin(ScrollTrigger);
 type StaticContentProps = {
   title: string;
   desc?: string;
-  button?: string;
+  linkText?: string;
+  slug?: string;
   position?: string;
 };
 
@@ -19,12 +21,13 @@ interface StaticContentMap {
   [key: number]: StaticContentProps;
 }
 
-const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({ 
-  title, 
-  desc, 
-  button, 
-  position, 
-  isVisible 
+const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
+  title,
+  desc,
+  linkText,
+  slug,
+  position,
+  isVisible,
 }) => {
   return (
     <AnimatePresence mode="wait">
@@ -33,27 +36,23 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ 
+          transition={{
             duration: 0.3,
-            ease: "easeInOut"
+            ease: "easeInOut",
           }}
-          className={`absolute text-white p-4 rounded ${position}`}
+          className={`absolute text-white p-2 md:p-4 rounded ${position}`}
         >
-          <h2 className="text-3xl mb-2 font-bold">{title}</h2>
-          
-          {desc && (
-            <p className="text-base mb-2">{desc}</p>
-          )}
-          
-          {button && (
-            <motion.button 
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.15 }}
-              className="block text-center px-6 py-2 bg-lighter rounded-full hover:bg-gray-300 transition-colors"
+          <h2 className="text-xl md:text-3xl mb-2 font-bold">{title}</h2>
+
+          {desc && <p className="text-sm md:text-base mb-4">{desc}</p>}
+
+          {linkText && slug && (
+            <Link
+              href={`/${slug}`}
+              className=" text-center px-6 py-2 bg-lighter rounded-full hover:bg-primary transition-colors"
             >
-              {button}
-            </motion.button>
+              {linkText}
+            </Link>
           )}
         </motion.div>
       )}
@@ -66,24 +65,28 @@ const staticContent: StaticContentMap = {
   0: {
     title: 'Introduction',
     desc: 'Welcome to our factory tour, showcasing our innovative processes.',
-    button: 'Learn More',
+    linkText: 'Learn More',
+    slug: 'introduction',
     position: 'bottom-10 left-10',
   },
   2: {
     title: 'Who Are We',
     desc: 'At Savita Synergy, we offer end-to-end aluminum solutions — from aluminum scrap to finished products. As a leading aluminum trading and manufacturing company in India, we serve diverse industries with reliable processing, finishing, and distribution services. With facilities like AL13 Metal and HPG Coaters, and a presence across major cities, we deliver quality, consistency, and service at every step.',
-    button: 'Our Story',
-    position: ' top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+    linkText: 'Our Story',
+    slug: 'about',
+    position: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
   },
   4: {
     title: 'What We Do',
     desc: 'We offer a diverse range of aluminum products including high-quality aluminum scrap for recycling, precision-grade ingots and billets for casting and extrusion, and versatile extruded profiles for construction, automotive, and industrial applications. We also design and manufacture custom dies to meet specific client requirements with high precision.',
-    position: ' top-20 left-1/2 -translate-x-1/2  justify-start items-start flex flex-col',
+    position: 'top-20 left-1/2 -translate-x-1/2 justify-start items-start flex flex-col',
   },
   6: {
     title: 'Aluminum Scrap',
     desc: 'Reliable material for recycling & manufacturing',
-    position: 'top-20 left-1/3 -translate-x-1/2  justify-start items-start flex flex-col',
+    position: 'top-20 left-1/3 -translate-x-1/2 justify-start items-start flex flex-col',
+    linkText: 'Know More',
+    slug: 'products/aluminum-scrap'
   },
   8: {
     title: 'Scrap Melting',
@@ -93,52 +96,63 @@ const staticContent: StaticContentMap = {
   10: {
     title: 'Ingots and Billets',
     desc: 'Quality Ingots & Billets for Precision Profiles',
-    button: 'Explore More',
-    position: 'top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2  ',
+    linkText: 'Explore More',
+    slug: 'products/ignots-and-billets',
+    position: 'top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2',
   },
   12: {
     title: 'Extrusion Process with Custom Dies',
     desc: 'Precision-Made Profiles Start Here, From Custom Dies to Finished Extrusions.',
     position: 'top-10 left-10',
+    linkText: "Explore More",
+    slug: 'products/extrusions-and-profiles'
   },
   14: {
     title: 'Aluminum Services',
     desc: 'Our value-added services include anodizing for durable, corrosion-resistant finishes and powder coating in a wide variety of colors and textures for enhanced protection. We also provide custom fabrication, cutting, and finishing services, enabling complete, end-to-end aluminum solutions.',
     position: 'top-10 left-1/2 -translate-x-2/5',
+
   },
   16: {
     title: 'Anodizing',
     desc: 'Durable, corrosion-resistant surface finish.',
     position: 'top-10 left-1/2 -translate-x-1/2',
+    linkText: 'Explore More',
+    slug: 'services/anodizing'
   },
   18: {
     title: 'Powder Coating',
     desc: 'Premium textures & colors for aluminum.',
-    position: ' bottom-10 left-10 ',
+    position: 'bottom-10 left-10',
+    linkText: 'Explore More',
+    slug: 'services/powder-coating'
   },
   20: {
     title: 'Fabrication',
     desc: 'End-to-end cutting, machining & finishing.',
-    button: 'Explore Services',
+    linkText: 'Explore Services',
+    slug: 'services/custom-fabrication',
     position: 'bottom-10 left-1/6',
   },
   22: {
     title: 'Contact Us',
     desc: 'Get in touch with our team for inquiries.',
-    button: 'Contact Now',
+    linkText: 'Contact Now',
+    slug: 'contact',
     position: 'top-1/2 left-1/2 -translate-x-1/2',
   },
   24: {
     title: 'Form',
     desc: 'Submit your details to connect with us.',
-    button: 'Submit Form',
+    linkText: 'Submit Form',
+    slug: 'contact-form',
     position: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
   },
 };
 
 // Define video public IDs (replace with actual IDs from Cloudinary)
 const videoPublicIds = [
-  'frame_1_n7t142', 
+  'frame_1_n7t142',
   'frame_2_tmmfln',
   'frame_3_zqarir',
   'frame_4_pahwur',
@@ -281,11 +295,19 @@ const FactoryTour = () => {
           className="absolute top-0 left-0 w-full h-full object-cover"
           src={`https://res.cloudinary.com/dxks5qn1d/video/upload/v1752829241/${videoPublicIds[index]}.mp4`}
           muted
-          preload='auto'
+          preload="auto"
           playsInline
+          onContextMenu={(e) => e.preventDefault()}
           {...(index === 0 ? { loop: true } : {})}
         />
       ))}
+
+      {/* Transparent Overlay */}
+      <div
+        className="absolute top-0 left-0 w-full h-full"
+        style={{ pointerEvents: 'all' }}
+        onContextMenu={(e) => e.preventDefault()}
+      />
 
       {/* Digital Display Board - Only visible on frame 1 */}
       <DigitalDisplayBoard isVisible={showDisplayBoard} />
@@ -295,13 +317,14 @@ const FactoryTour = () => {
         const index = parseInt(frameIndex);
         // Don't show regular content for frame 1 (index 0) as we show the display board instead
         if (index === 0) return null;
-        
+
         return (
           <StaticContent
             key={index}
             title={content.title}
             desc={content.desc}
-            button={content.button}
+            linkText={content.linkText}
+            slug={content.slug}
             position={content.position}
             isVisible={visibleContent === index}
           />
