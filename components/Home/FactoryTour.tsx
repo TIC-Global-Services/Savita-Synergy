@@ -279,7 +279,7 @@ const FactoryTour = () => {
     const scrollTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top top',
-      end: '+=1800%', 
+      end: '+=1500%', 
       pin: true,
       scrub: 1,
       onUpdate: (self) => {
