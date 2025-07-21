@@ -279,7 +279,7 @@ const FactoryTour = () => {
     const scrollTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top top',
-      end: '+=5000%', // Increased scroll distance for more control
+      end: '+=1800%', 
       pin: true,
       scrub: 1,
       onUpdate: (self) => {
