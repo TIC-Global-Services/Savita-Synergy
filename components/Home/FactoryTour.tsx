@@ -15,6 +15,7 @@ type StaticContentProps = {
   linkText?: string;
   slug?: string;
   position?: string;
+  scrollProgress?: number; // Controls word reveal based on scroll
 };
 
 interface StaticContentMap {
@@ -28,7 +29,21 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
   slug,
   position,
   isVisible,
+  scrollProgress,
 }) => {
+  // Split title and desc into words
+  const titleWords = title.split(' ');
+  const descWords = desc ? desc.split(' ') : [];
+  const totalWords = titleWords.length + descWords.length;
+  
+  // Calculate number of words to show based on scrollProgress
+  const safeScrollProgress = typeof scrollProgress === 'number' ? scrollProgress : 0;
+  // Use a more gradual reveal - words appear throughout the scroll range
+  const wordsToShow = Math.floor(safeScrollProgress * (totalWords + 1));
+  
+  // Show link when all words are revealed and we have some extra progress
+  const showLink = linkText && slug && wordsToShow >= totalWords && safeScrollProgress > 0.8;
+
   return (
     <AnimatePresence mode="wait">
       {isVisible && (
@@ -38,19 +53,60 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
           exit={{ opacity: 0 }}
           transition={{
             duration: 0.3,
-            ease: "easeInOut",
+            ease: 'easeInOut',
           }}
           className={`absolute text-white p-4 rounded w-full max-w-xl ${position}`}
         >
-          <h2 className="text-xl md:text-3xl mb-2 font-bold">{title}</h2>
-          {desc && <p className="text-sm md:text-base mb-4">{desc}</p>}
-          {linkText && slug && (
-            <Link
-              href={`/${slug}`}
-              className="text-center px-6 py-2 bg-lighter rounded-full hover:bg-primary transition-colors"
+          <h2 className="text-xl md:text-3xl mb-2 font-bold">
+            {titleWords.map((word, index) => (
+              <motion.span
+                key={`title-${index}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: index < wordsToShow ? 1 : 0 }}
+                transition={{
+                  duration: 0.3,
+                  delay: 0,
+                }}
+                className="inline-block mr-1"
+              >
+                {word}
+              </motion.span>
+            ))}
+          </h2>
+          {desc && (
+            <p className="text-sm md:text-base mb-4">
+              {descWords.map((word, index) => (
+                <motion.span
+                  key={`desc-${index}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: index + titleWords.length < wordsToShow ? 1 : 0 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: 0,
+                  }}
+                  className="inline-block mr-1"
+                >
+                  {word}
+                </motion.span>
+              ))}
+            </p>
+          )}
+          {showLink && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{
+                duration: 0.3,
+                delay: 0,
+              }}
             >
-              {linkText}
-            </Link>
+              <Link
+                href={`/${slug}`}
+                className="text-center px-6 py-2 bg-lighter rounded-full hover:bg-primary transition-colors"
+              >
+                {linkText}
+              </Link>
+            </motion.div>
           )}
         </motion.div>
       )}
@@ -84,12 +140,12 @@ const staticContent: StaticContentMap = {
     desc: 'Reliable material for recycling & manufacturing',
     position: 'top-20 md:left-1/3 md:-translate-x-1/2 justify-start items-start flex flex-col',
     linkText: 'Know More',
-    slug: 'products/aluminum-scrap'
+    slug: 'products/aluminum-scrap',
   },
   8: {
     title: 'Scrap Melting',
     desc: 'Enhancing Quality Through Purity & Precision.',
-    position: ' top-20 md:top-40 md:left-20',
+    position: 'top-20 md:top-40 md:left-20',
   },
   10: {
     title: 'Ingots and Billets',
@@ -102,8 +158,8 @@ const staticContent: StaticContentMap = {
     title: 'Extrusion Process with Custom Dies',
     desc: 'Precision-Made Profiles Start Here, From Custom Dies to Finished Extrusions.',
     position: 'top-10 md:left-10',
-    linkText: "Explore More",
-    slug: 'products/extrusions-and-profiles'
+    linkText: 'Explore More',
+    slug: 'products/extrusions-and-profiles',
   },
   14: {
     title: 'Aluminum Services',
@@ -115,14 +171,14 @@ const staticContent: StaticContentMap = {
     desc: 'Durable, corrosion-resistant surface finish.',
     position: 'top-10 left-1/2 -translate-x-1/2',
     linkText: 'Explore More',
-    slug: 'services/anodizing'
+    slug: 'services/anodizing',
   },
   18: {
     title: 'Powder Coating',
     desc: 'Premium textures & colors for aluminum.',
     position: 'bottom-10 md:left-10',
     linkText: 'Explore More',
-    slug: 'services/powder-coating'
+    slug: 'services/powder-coating',
   },
   20: {
     title: 'Fabrication',
@@ -163,9 +219,9 @@ const videoPublicIds = [
   'frame_12_wixnxv',
   'frame_13_ssjmdk',
   'frame_14_l9g3is',
-  'frame_15_vxgcuq',
+  'frame_15_trimmed_zslodq',
   'frame_16_q1umul',
-  'frame_17_c2re25',
+  'frame_17_trimmed_veqdd4',
   'frame_18_g6qfm3',
   'frame_19_we8ga1',
   'frame_20_rq9a7o',
@@ -181,6 +237,7 @@ const FactoryTour = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visibleContent, setVisibleContent] = useState<number | null>(0);
   const [showDisplayBoard, setShowDisplayBoard] = useState<boolean>(true);
+  const [contentProgress, setContentProgress] = useState<number>(0);
 
   useEffect(() => {
     const videos = videoRefs.current;
@@ -218,63 +275,79 @@ const FactoryTour = () => {
     };
 
     // Create ScrollTrigger for video and content transitions
+    const totalFrames = 25;
     const scrollTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top top',
-      end: '+=1800%',
+      end: '+=5000%', // Increased scroll distance for more control
       pin: true,
       scrub: 1,
       onUpdate: (self) => {
         const progress = self.progress;
-        const segment = 1 / 24; // 24 transitions for 25 videos
+        
+        // Calculate which frame should be active based on progress
+        const frameProgress = progress * totalFrames;
+        const currentFrame = Math.floor(frameProgress);
+        let frameLocalProgress = frameProgress - currentFrame;
+        
+        // Add a "hold" period after content is fully revealed (last 15% of each frame)
+        // This gives users 1 second to read the fully revealed content
+        const holdThreshold = 0.85; // Content fully revealed at 85% of frame progress
+        if (frameLocalProgress >= holdThreshold) {
+          frameLocalProgress = 1; // Keep content fully visible during hold period
+        } else {
+          // Scale the progress so content reveals from 0-85% of frame duration
+          frameLocalProgress = frameLocalProgress / holdThreshold;
+        }
+        
+        // Clamp to valid frame range
+        const activeFrame = Math.min(currentFrame, totalFrames - 1);
+        
+        // Handle video visibility and playback
+        if (videos[activeFrame]) {
+          gsap.set(videos[activeFrame], { autoAlpha: 1 });
+          gsap.set(videos.filter((v, idx) => idx !== activeFrame && v), { autoAlpha: 0 });
 
-        for (let i = 0; i < 25; i++) {
-          const isTransition = i % 2 === 1; // Transition videos: 1,3,5,7,9,11,13,15,17,19,21,23 | Static videos: 0,2,4,6,8,10,12,14,16,18,20,22,24
-          const startProgress = i * segment;
-          const endProgress = (i + 1) * segment;
-
-          if (progress >= startProgress && progress < endProgress) {
-            // Handle video visibility and playback
-            if (videos[i]) {
-              gsap.set(videos[i], { autoAlpha: 1 });
-              gsap.set(videos.filter((v, idx) => idx !== i && v), { autoAlpha: 0 });
-
-              if (isTransition) {
-                // Transition video: control timeline
-                const video = videos[i];
-                if (video) {
-                  const videoDuration = video.duration || 10;
-                  const adjustedProgress = (progress - startProgress) / segment;
-                  video.currentTime = adjustedProgress * videoDuration;
-                  video.loop = false;
-                  if (!video.paused) {
-                    video.pause();
-                  }
-                }
-              } else {
-                // Static video: play with loop
-                const video = videos[i];
-                if (video && video.paused) {
-                  video.loop = true;
-                  video.play().catch((error) => {
-                    console.error(`Error playing video ${i + 1}:`, error);
-                  });
-                }
+          const isTransition = activeFrame % 2 === 1;
+          
+          if (isTransition) {
+            // Transition video: control timeline based on local progress
+            const video = videos[activeFrame];
+            if (video) {
+              const videoDuration = video.duration || 10;
+              video.currentTime = frameLocalProgress * videoDuration;
+              video.loop = false;
+              if (!video.paused) {
+                video.pause();
               }
             }
+            setVisibleContent(null);
+            setShowDisplayBoard(false);
+            setContentProgress(0);
+          } else {
+            // Static video: play with loop and show content
+            const video = videos[activeFrame];
+            if (video && video.paused) {
+              video.loop = true;
+              video.play().catch((error) => {
+                console.error(`Error playing video ${activeFrame + 1}:`, error);
+              });
+            }
 
-            // Handle content visibility for static videos with Framer Motion
-            if (!isTransition && staticContent.hasOwnProperty(i)) {
-              setVisibleContent(i);
-              setShowDisplayBoard(i === 0); // Show display board only on frame 1
+            // Set content progress based on local frame progress
+            setContentProgress(frameLocalProgress);
+
+            // Handle content visibility
+            if (staticContent.hasOwnProperty(activeFrame)) {
+              setVisibleContent(activeFrame);
+              setShowDisplayBoard(activeFrame === 0);
             } else {
               setVisibleContent(null);
               setShowDisplayBoard(false);
             }
-
-            pauseOtherVideos(i);
-            break;
           }
+
+          pauseOtherVideos(activeFrame);
         }
       },
     });
@@ -315,10 +388,9 @@ const FactoryTour = () => {
       {/* Digital Display Board - Only visible on frame 1 */}
       <DigitalDisplayBoard isVisible={showDisplayBoard} />
 
-      {/* Static Content with Framer Motion Animations */}
+      {/* Static Content with Word-by-Word Animations */}
       {Object.entries(staticContent).map(([frameIndex, content]) => {
         const index = parseInt(frameIndex);
-        // Don't show regular content for frame 1 (index 0) as we show the display board instead
         if (index === 0) return null;
 
         return (
@@ -330,6 +402,7 @@ const FactoryTour = () => {
             slug={content.slug}
             position={content.position}
             isVisible={visibleContent === index}
+            scrollProgress={contentProgress}
           />
         );
       })}
