@@ -221,7 +221,7 @@ const videoPublicIds = [
   'frame_14_l9g3is',
   'frame_15_trimmed_zslodq',
   'frame_16_q1umul',
-  'frame_17_trimmed_veqdd4',
+  'frame_17_trimmed_ylivca',
   'frame_18_g6qfm3',
   'frame_19_we8ga1',
   'frame_20_rq9a7o',
@@ -235,11 +235,21 @@ const videoPublicIds = [
 const FactoryTour = () => {
   const videoRefs = useRef<(HTMLVideoElement | null)[]>(Array(25).fill(null));
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [visibleContent, setVisibleContent] = useState<number | null>(0);
-  const [showDisplayBoard, setShowDisplayBoard] = useState<boolean>(true);
+  const [visibleContent, setVisibleContent] = useState<number | null>(null);
+  const [showDisplayBoard, setShowDisplayBoard] = useState<boolean>(false);
   const [contentProgress, setContentProgress] = useState<number>(0);
+  const [isClient, setIsClient] = useState<boolean>(false);
+
+  // Fix hydration by ensuring client-side only rendering
+  useEffect(() => {
+    setIsClient(true);
+    setVisibleContent(0);
+    setShowDisplayBoard(true);
+  }, []);
 
   useEffect(() => {
+    if (!isClient) return; // Wait for client-side hydration
+    
     const videos = videoRefs.current;
 
     if (!sectionRef.current || videos.some((video) => !video)) {
@@ -259,10 +269,27 @@ const FactoryTour = () => {
     const firstVideo = videos[0] as HTMLVideoElement | null;
     if (firstVideo) {
       firstVideo.loop = true;
-      firstVideo.play().catch((error: unknown) => {
-        console.error('Error playing first video:', error);
-      });
+      // Use a promise to handle play interruptions
+      const playPromise = firstVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error: unknown) => {
+          console.error('Error playing first video:', error);
+        });
+      }
     }
+
+    // Helper function to safely play video
+    const safePlayVideo = (video: HTMLVideoElement, shouldLoop: boolean = false) => {
+      if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+        video.loop = shouldLoop;
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((error: unknown) => {
+            console.error('Error playing video:', error);
+          });
+        }
+      }
+    };
 
     // Helper function to pause all videos except the active one
     const pauseOtherVideos = (activeIndex: number) => {
@@ -279,7 +306,7 @@ const FactoryTour = () => {
     const scrollTrigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top top',
-      end: '+=1500%', 
+      end: '+=5000%', // Increased scroll distance for more control
       pin: true,
       scrub: 1,
       onUpdate: (self) => {
@@ -315,7 +342,9 @@ const FactoryTour = () => {
             const video = videos[activeFrame];
             if (video) {
               const videoDuration = video.duration || 10;
-              video.currentTime = frameLocalProgress * videoDuration;
+              // Use the original frameProgress for smoother video scrubbing
+              const rawProgress = (frameProgress - currentFrame);
+              video.currentTime = Math.min(rawProgress * videoDuration, videoDuration - 0.1);
               video.loop = false;
               if (!video.paused) {
                 video.pause();
@@ -328,10 +357,7 @@ const FactoryTour = () => {
             // Static video: play with loop and show content
             const video = videos[activeFrame];
             if (video && video.paused) {
-              video.loop = true;
-              video.play().catch((error) => {
-                console.error(`Error playing video ${activeFrame + 1}:`, error);
-              });
+              safePlayVideo(video, true);
             }
 
             // Set content progress based on local frame progress
@@ -357,55 +383,60 @@ const FactoryTour = () => {
       scrollTrigger.kill();
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
-  }, []);
+  }, [isClient]); // Add isClient dependency
 
   return (
     <section ref={sectionRef} className="relative w-full h-screen overflow-hidden">
-      {/* Video Background */}
-      {Array.from({ length: 25 }).map((_, index) => (
-        <video
-          key={index}
-          ref={(el) => {
-            videoRefs.current[index] = el;
-          }}
-          className="absolute top-0 left-0 w-full h-full object-cover"
-          src={`https://res.cloudinary.com/dxks5qn1d/video/upload/v1752829241/${videoPublicIds[index]}.mp4`}
-          muted
-          playsInline
-          preload="auto"
-          onContextMenu={(e) => e.preventDefault()}
-          {...(index === 0 ? { loop: true } : {})}
-        />
-      ))}
+      {/* Only render content after hydration */}
+      {isClient && (
+        <>
+          {/* Video Background */}
+          {Array.from({ length: 25 }).map((_, index) => (
+            <video
+              key={index}
+              ref={(el) => {
+                videoRefs.current[index] = el;
+              }}
+              className="absolute top-0 left-0 w-full h-full object-cover"
+              src={`https://res.cloudinary.com/dxks5qn1d/video/upload/v1752829241/${videoPublicIds[index]}.mp4`}
+              muted
+              playsInline
+              preload="metadata"
+              onContextMenu={(e) => e.preventDefault()}
+              {...(index === 0 ? { loop: true } : {})}
+            />
+          ))}
 
-      {/* Transparent Overlay */}
-      <div
-        className="absolute top-0 left-0 w-full h-full"
-        style={{ pointerEvents: 'all' }}
-        onContextMenu={(e) => e.preventDefault()}
-      />
-
-      {/* Digital Display Board - Only visible on frame 1 */}
-      <DigitalDisplayBoard isVisible={showDisplayBoard} />
-
-      {/* Static Content with Word-by-Word Animations */}
-      {Object.entries(staticContent).map(([frameIndex, content]) => {
-        const index = parseInt(frameIndex);
-        if (index === 0) return null;
-
-        return (
-          <StaticContent
-            key={index}
-            title={content.title}
-            desc={content.desc}
-            linkText={content.linkText}
-            slug={content.slug}
-            position={content.position}
-            isVisible={visibleContent === index}
-            scrollProgress={contentProgress}
+          {/* Transparent Overlay */}
+          <div
+            className="absolute top-0 left-0 w-full h-full"
+            style={{ pointerEvents: 'all' }}
+            onContextMenu={(e) => e.preventDefault()}
           />
-        );
-      })}
+
+          {/* Digital Display Board - Only visible on frame 1 */}
+          <DigitalDisplayBoard isVisible={showDisplayBoard} />
+
+          {/* Static Content with Word-by-Word Animations */}
+          {Object.entries(staticContent).map(([frameIndex, content]) => {
+            const index = parseInt(frameIndex);
+            if (index === 0) return null;
+
+            return (
+              <StaticContent
+                key={index}
+                title={content.title}
+                desc={content.desc}
+                linkText={content.linkText}
+                slug={content.slug}
+                position={content.position}
+                isVisible={visibleContent === index}
+                scrollProgress={contentProgress}
+              />
+            );
+          })}
+        </>
+      )}
     </section>
   );
 };
