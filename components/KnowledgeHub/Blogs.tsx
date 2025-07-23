@@ -58,7 +58,7 @@ const Blogs: React.FC = () => {
  
 
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-20 bg-gray-50">
+    <section id='blogs' className="py-12 px-4 sm:px-6 lg:px-20 bg-gray-50">
       <div className=" mx-auto">
         <motion.div
           variants={headerVariants}

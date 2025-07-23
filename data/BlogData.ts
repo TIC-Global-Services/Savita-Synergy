@@ -519,7 +519,8 @@ And with reliable partners like **Savita Synergy**, your extrusion needs are not
   
   As industries transform, **aluminium stays ahead**, proving why it truly is the **metal of the future**.
     `,
-  }
+  },
+  
 
 ];
 
