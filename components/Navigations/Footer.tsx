@@ -7,6 +7,8 @@ import FooterBG from "@/assets/Footer/FooterBG.jpg";
 import {
   FaFacebook as FaceBookIcon,
   FaInstagram as InstaIcon,
+  FaLinkedin as LinkedinIcon,
+  FaYoutube as YoutubeIcon,
 } from "react-icons/fa";
 import { CustomToast } from "../Reusable/CustomToast";
 import toast from "react-hot-toast";
@@ -26,6 +28,16 @@ const Footer = () => {
       title: "Instagram",
       link: "https://instagram.com/savitasynergy",
       icon: InstaIcon,
+    },
+    {
+      title: "Linkedin",
+      link: "https://www.linkedin.com/company/savitasynergy/",
+      icon: LinkedinIcon,
+    },
+    {
+      title: "Youtube",
+      link: "https://www.youtube.com/@savitasynergy",
+      icon: YoutubeIcon,
     },
   ];
 
@@ -237,7 +249,7 @@ const Footer = () => {
               Contact
             </h2>
             <div className="space-y-2 text-sm sm:text-base">
-              <p>
+              <p className=" flex gap-2">
                 Email:{" "}
                 <Link
                   href="mailto:contact@savitasynergy.com
@@ -247,9 +259,9 @@ const Footer = () => {
                   contact@savitasynergy.com
                 </Link>
               </p>
-              <p className=" flex  gap-2">
+              <p className=" flex gap-2">
                 Phone:{" "}
-                <div className=" flex flex-col gap-2">
+                <div className=" flex flex-col">
                   <Link
                     href="tel:+919875550437"
                     className="text-gray-300 hover:text-white transition-colors duration-200"
