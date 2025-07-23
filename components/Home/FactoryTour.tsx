@@ -216,7 +216,7 @@ const videoPublicIds = [
   'frame_9_s0fiix',
   'frame_10_cpt363',
   'frame_11_zltirx',
-  'frame_12_wixnxv',
+  'frame_12_final_gtrifq',
   'frame_13_ssjmdk',
   'frame_14_l9g3is',
   'frame_15_trimmed_zslodq',
