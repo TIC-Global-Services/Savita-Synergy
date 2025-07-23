@@ -195,10 +195,10 @@ const staticContent: StaticContentMap = {
     position: 'top-1/2 left-1/2 -translate-x-1/2',
   },
   24: {
-    title: 'Form',
-    desc: 'Submit your details to connect with us.',
-    linkText: 'Submit Form',
-    slug: 'contact-form',
+    title: ' ',
+    desc: ' ',
+    // linkText: 'Submit Form',
+    // slug: 'contact-form',
     position: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
   },
 };
@@ -221,7 +221,7 @@ const videoPublicIds = [
   'frame_14_l9g3is',
   'frame_15_trimmed_zslodq',
   'frame_16_q1umul',
-  'frame_17_trimmed_ylivca',
+  'frame_17_c2re25',
   'frame_18_g6qfm3',
   'frame_19_we8ga1',
   'frame_20_rq9a7o',
