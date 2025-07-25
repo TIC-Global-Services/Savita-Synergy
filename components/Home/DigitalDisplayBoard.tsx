@@ -60,21 +60,21 @@ export const DigitalDisplayBoard: React.FC<{ isVisible: boolean }> = ({ isVisibl
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 2.5, y: "-150%", transition: { duration: 0.5, ease: "easeIn" } }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 lg:-translate-y-[15%] 2xl:-translate-y-[20%] w-[33%] bg-black text-green-400 font-mono overflow-hidden shadow-2xl border border-green-800 px-3 md:ml-2"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[10%] lg:-translate-y-[15%] 2xl:-translate-y-[20%] md:w-[33%] bg-black text-green-400 font-mono overflow-hidden shadow-2xl border border-green-800 px-3 md:ml-2"
         >
           {/* Header */}
-          <div className=" text-green-400  py-2 flex justify-between items-center border-b border-green-800">
-            <div className="text-sm sm:text-base font-bold tracking-wider">
-              SAVITA SYNERGY - ALUMINUM PRICES
+          <div className=" text-green-400  md:py-2 flex justify-between items-center border-b border-green-800">
+            <div className="text-[7px] sm:text-base font-bold tracking-wider">
+              SAVITA SYNERGY PRICES
             </div>
             <div className="text-right">
-              <div className="text-sm sm:text-base font-bold">{formatTime(currentTime)}</div>
-              <div className="text-xs opacity-75">{formatDate(currentTime)}</div>
+              <div className="text-[6px] sm:text-base font-bold">{formatTime(currentTime)}</div>
+              <div className="text-[5px] opacity-75">{formatDate(currentTime)}</div>
             </div>
           </div>
 
           {/* Main Display Area */}
-          <div className="h-[9dvh] bg-black relative overflow-hidden">
+          <div className=" h-[3dvh] md:h-[9dvh] bg-black relative overflow-hidden">
             {/* Scrolling Price Text */}
             <motion.div
               className="absolute whitespace-nowrap flex items-center h-full text-lg sm:text-2xl font-bold"
