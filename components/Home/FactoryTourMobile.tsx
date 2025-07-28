@@ -291,7 +291,7 @@ const FactoryTourMobile: React.FC = () => {
         const canvasAspect = canvasWidth / canvasHeight;
         const imgAspect = img.width / img.height;
     
-        let drawWidth, drawHeight, srcX, srcY, srcWidth, srcHeight;
+        let drawWidth, drawHeight, srcX, srcY;
     
         if (canvasAspect > imgAspect) {
           // Canvas is wider, crop top/bottom
@@ -307,8 +307,8 @@ const FactoryTourMobile: React.FC = () => {
           srcY = 0;
         }
     
-        srcWidth = drawWidth;
-        srcHeight = drawHeight;
+        const srcWidth = drawWidth;
+        const srcHeight = drawHeight;
     
         context.drawImage(
           img,
