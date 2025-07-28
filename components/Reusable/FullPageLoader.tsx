@@ -1,209 +1,144 @@
-'use client';
+"use client"
 
-import React from 'react';
+import type React from "react"
 
 interface FullPageLoaderProps {
-  percentage: number;
-  isVisible: boolean;
+  percentage: number
+  isVisible: boolean
 }
 
 const FullPageLoader: React.FC<FullPageLoaderProps> = ({ percentage, isVisible }) => {
-  if (!isVisible) return null;
+  if (!isVisible) return null
+
+  const getLoadingPhase = () => {
+    if (percentage < 20) return "Initializing"
+    if (percentage < 40) return "Loading Assets"
+    if (percentage < 60) return "Preparing Environment"
+    if (percentage < 80) return "Configuring Environment"
+    if (percentage < 95) return "Finalizing Setup"
+    return "Launch Ready"
+  }
 
   return (
-    <div 
-      className="fixed inset-0 z-50 bg-gradient-to-br from-[#2C2B2B] via-[#333334] to-[#2C2B2B] flex flex-col justify-center items-center text-white overflow-hidden"
-      style={{ fontFamily: 'var(--font-montserrat)' }}
+    <div
+      className="fixed inset-0 z-50 bg-[#0f0f0f] flex items-center justify-center text-white"
+      style={{ fontFamily: "var(--font-montserrat)" }}
       role="status"
       aria-live="polite"
-      aria-label="Loading"
+      aria-label="Loading application"
     >
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full blur-3xl animate-pulse opacity-20" 
-             style={{ backgroundColor: '#59692E' }}></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full blur-3xl animate-pulse delay-1000 opacity-20" 
-             style={{ backgroundColor: '#94AC55' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full blur-3xl animate-spin-slow opacity-10" 
-             style={{ backgroundColor: '#3E4726' }}></div>
-      </div>
+      {/* Subtle background texture */}
+      <div
+        className="absolute inset-0 opacity-[0.015]"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(148, 172, 85, 0.3) 1px, transparent 0)`,
+        }}
+      />
 
-      {/* Floating Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 rounded-full animate-float"
-            style={{
-              backgroundColor: i % 3 === 0 ? '#59692E' : i % 3 === 1 ? '#94AC55' : '#3E4726',
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${3 + Math.random() * 4}s`,
-              opacity: 0.6
-            }}
-          ></div>
-        ))}
-      </div>
-
-      {/* Main Content Container */}
-      <div className="relative z-10 flex flex-col items-center gap-12 p-8 max-w-2xl mx-auto text-center">
-        
-
-
-        {/* Percentage Display */}
-        <div className="relative mt-20">
-          <div className="text-8xl md:text-9xl font-black animate-pulse bg-gradient-to-r bg-clip-text text-transparent"
-               style={{ 
-                 backgroundImage: `linear-gradient(45deg, #59692E, #94AC55, #3E4726)`,
-                 backgroundSize: '200% 200%'
-               }}>
-            {Math.round(percentage)}
+      <div className="relative w-full max-w-lg mx-auto px-8">
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-3 mb-6">
+            <div className="w-8 h-0.5 bg-gradient-to-r from-transparent via-[#94AC55] to-transparent" />
+            <div className="w-2 h-2 bg-[#59692E] rounded-full" />
+            <div className="w-8 h-0.5 bg-gradient-to-r from-transparent via-[#94AC55] to-transparent" />
           </div>
-          <span className="absolute -top-4 -right-8 text-3xl font-bold opacity-60" 
-                style={{ color: '#D8DFE6' }}>%</span>
+
+          <h1 className="text-sm font-medium text-white/90 tracking-[0.2em] uppercase mb-2">3D Initialization</h1>
+          <p className="text-xs text-white/50 font-light tracking-wide">Preparing Immersive Experience</p>
         </div>
 
-        {/* Loading Text */}
-        <div className="space-y-4 animate-fade-in-up">
-          <h1 className="text-4xl md:text-5xl font-bold"
-              style={{ color: '#FFFFFF' }}>
-            Loading 3D Experience
-          </h1>
-          <p className="text-xl md:text-2xl font-light max-w-lg leading-relaxed"
-             style={{ color: '#D8DFE6' }}>
-            Crafting something extraordinary for you...
-          </p>
-        </div>
+        {/* Main Progress Section */}
+        <div className="space-y-12">
+          {/* Percentage Display */}
+          <div className="text-center">
+            <div className="inline-flex items-baseline gap-1 mb-3">
+              <span className="text-5xl font-medium text-white">
+                {Math.round(percentage).toString().padStart(2, "0")}
+              </span>
+              <span className="text-lg font-light text-white/60">%</span>
+            </div>
+            <div className="text-xs font-medium text-[#94AC55] tracking-widest uppercase">{getLoadingPhase()}</div>
+          </div>
 
-        {/* Enhanced Progress Bar */}
-        <div className="w-full max-w-lg space-y-4">
-          <div className="relative h-3 rounded-full overflow-hidden backdrop-blur-sm border"
-               style={{ 
-                 backgroundColor: 'rgba(139, 140, 140, 0.2)',
-                 borderColor: '#4B4B4C'
-               }}>
-            <div
-              className="h-full transition-all duration-700 ease-out rounded-full relative"
-              style={{ 
-                width: `${percentage}%`,
-                background: `linear-gradient(90deg, #59692E 0%, #94AC55 50%, #3E4726 100%)`
-              }}
-              role="progressbar"
-              aria-valuenow={percentage}
-              aria-valuemin={0}
-              aria-valuemax={100}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer-fast"></div>
+          {/* Progress Track */}
+          <div className="space-y-6">
+            <div className="relative">
+              <div className="h-px bg-white/[0.08] rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-[#59692E] via-[#94AC55] to-[#59692E] transition-all duration-[1200ms] ease-out relative"
+                  style={{ width: `${percentage}%` }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-sweep" />
+                </div>
+              </div>
+
+              {/* Progress markers */}
+              <div className="absolute -top-1 left-0 w-full flex justify-between">
+                {[0, 25, 50, 75, 100].map((mark) => (
+                  <div
+                    key={mark}
+                    className={`w-0.5 h-2 transition-colors duration-500 ${
+                      percentage >= mark ? "bg-[#94AC55]" : "bg-white/20"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Status indicators */}
+            <div className="grid grid-cols-4 gap-4 text-center">
+              {[
+                { label: "Init", threshold: 20 },
+                { label: "Load", threshold: 40 },
+                { label: "Prep", threshold: 60 },
+                { label: "Ready", threshold: 100 },
+              ].map((status, index) => (
+                <div key={index} className="space-y-2">
+                  <div
+                    className={`w-1 h-1 mx-auto rounded-full transition-all duration-500 ${
+                      percentage >= status.threshold
+                        ? "bg-[#94AC55] shadow-[0_0_8px_rgba(148,172,85,0.6)]"
+                        : "bg-white/20"
+                    }`}
+                  />
+                  <div
+                    className={`text-[10px] font-medium tracking-wider uppercase transition-colors duration-500 ${
+                      percentage >= status.threshold ? "text-white/80" : "text-white/30"
+                    }`}
+                  >
+                    {status.label}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-          
-          {/* Progress Steps */}
-          <div className="flex justify-between text-sm font-medium">
-            <span style={{ color: percentage > 25 ? '#94AC55' : '#8C8C8C' }}>
-              Initializing
-            </span>
-            <span style={{ color: percentage > 50 ? '#59692E' : '#8C8C8C' }}>
-              Loading Assets
-            </span>
-            <span style={{ color: percentage > 75 ? '#3E4726' : '#8C8C8C' }}>
-              Rendering
-            </span>
-            <span style={{ color: percentage >= 100 ? '#94AC55' : '#8C8C8C' }}>
-              Complete
-            </span>
+
+        
+        </div>
+
+        {/* Bottom accent */}
+        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
+          <div className="flex items-center gap-1">
+            <div className="w-1 h-1 bg-[#59692E]/60 rounded-full" />
+            <div className="w-1 h-1 bg-[#94AC55]/60 rounded-full" />
+            <div className="w-1 h-1 bg-[#3E4726]/60 rounded-full" />
           </div>
         </div>
-
-        {/* Loading Dots */}
-        <div className="flex gap-3">
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className="w-3 h-3 rounded-full animate-bounce"
-              style={{ 
-                backgroundColor: i === 0 ? '#59692E' : i === 1 ? '#94AC55' : '#3E4726',
-                animationDelay: `${i * 0.3}s`
-              }}
-            ></div>
-          ))}
-        </div>
-
-        {/* Brand Accent Line */}
-        <div className="w-24 h-1 rounded-full opacity-60"
-             style={{ background: `linear-gradient(90deg, #59692E, #94AC55, #3E4726)` }}></div>
       </div>
 
       <style jsx>{`
-        @keyframes float {
-          0%, 100% { 
-            transform: translateY(0px) rotate(0deg); 
-            opacity: 0.3;
-          }
-          50% { 
-            transform: translateY(-20px) rotate(180deg); 
-            opacity: 0.8;
-          }
-        }
-        
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        
-        @keyframes reverse-spin {
-          from { transform: rotate(360deg); }
-          to { transform: rotate(0deg); }
-        }
-        
-        @keyframes shimmer-fast {
+        @keyframes sweep {
           0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
+          100% { transform: translateX(200%); }
         }
         
-        @keyframes fade-in-up {
-          from { 
-            opacity: 0; 
-            transform: translateY(30px); 
-          }
-          to { 
-            opacity: 1; 
-            transform: translateY(0); 
-          }
-        }
-        
-        @keyframes gradient-shift {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        
-        .animate-float {
-          animation: float 4s ease-in-out infinite;
-        }
-        
-        .animate-spin-slow {
-          animation: spin-slow 8s linear infinite;
-        }
-        
-        .animate-reverse-spin {
-          animation: reverse-spin 12s linear infinite;
-        }
-        
-        .animate-shimmer-fast {
-          animation: shimmer-fast 1.5s infinite;
-        }
-        
-        .animate-fade-in-up {
-          animation: fade-in-up 1s ease-out;
-        }
-        
-        .animate-gradient {
-          animation: gradient-shift 3s ease infinite;
+        .animate-sweep {
+          animation: sweep 3s infinite;
         }
       `}</style>
     </div>
-  );
-};
+  )
+}
 
-export default FullPageLoader;
+export default FullPageLoader

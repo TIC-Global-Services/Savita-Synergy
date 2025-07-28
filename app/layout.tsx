@@ -35,7 +35,7 @@ export default function RootLayout({
           {children}
 
           
-          <CookieConsent />
+          {/* <CookieConsent /> */}
           <Footer />
         </LenisProvider>
       </body>

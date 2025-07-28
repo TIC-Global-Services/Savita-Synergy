@@ -249,7 +249,7 @@ const Footer = () => {
               Contact
             </h2>
             <div className="space-y-2 text-sm sm:text-base">
-              <p className=" flex gap-2">
+              <div className=" flex gap-2">
                 Email:{" "}
                 <Link
                   href="mailto:contact@savitasynergy.com
@@ -258,8 +258,8 @@ const Footer = () => {
                 >
                   contact@savitasynergy.com
                 </Link>
-              </p>
-              <p className=" flex gap-2">
+              </div>
+              <div className=" flex gap-2">
                 Phone:{" "}
                 <div className=" flex flex-col">
                   <Link
@@ -275,7 +275,7 @@ const Footer = () => {
                     +91 9330838236
                   </Link>
                 </div>
-              </p>
+              </div>
               <p>
                 Address:{" "}
                 <Link
