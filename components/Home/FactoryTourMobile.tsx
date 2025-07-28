@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import FullPageLoader from "../Reusable/FullPageLoader";
+import { DigitalDisplayBoard } from "./DigitalDisplayBoard";
 
 type StaticContentProps = {
   title: string;
@@ -29,7 +30,7 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
   isVisible,
   // scrollProgress,
 }) => {
-  const showLink = linkText && slug ;
+  const showLink = linkText && slug;
 
   return (
     <AnimatePresence mode="wait">
@@ -41,7 +42,7 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
           transition={{ duration: 0.6, ease: "easeOut" }}
           className={`fixed text-white p-6 rounded-lg z-30 max-w-sm md:max-w-xl ${position}`}
           style={{
-            pointerEvents: 'auto',
+            pointerEvents: "auto",
           }}
         >
           <h2 className=" text-xl mb-3 font-bold leading-tight text-lighter text-shadow-md">
@@ -56,7 +57,7 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4,  ease: "easeOut" }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
             >
               <Link
                 href={`/${slug}`}
@@ -65,7 +66,7 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
                 {linkText}
               </Link>
             </motion.div>
-           )} 
+          )}
         </motion.div>
       )}
     </AnimatePresence>
@@ -159,7 +160,7 @@ const staticContent: StaticContentMap = {
 };
 
 const frameRanges: { key: number; startFrame: number; endFrame: number }[] = [
-  { key: 2, startFrame: 45, endFrame: 70 },
+  { key: 2, startFrame: 50, endFrame: 70 },
   { key: 4, startFrame: 340, endFrame: 480 },
   { key: 6, startFrame: 630, endFrame: 780 },
   { key: 8, startFrame: 880, endFrame: 1020 },
@@ -180,6 +181,7 @@ const FactoryTourMobile: React.FC = () => {
   const [loadPercentage, setLoadPercentage] = useState(0);
   const [currentFrame, setCurrentFrame] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(0);
+  const [showDisplayBoard, setShowDisplayBoard] = useState<boolean>(false);
 
   // Track viewport height changes including browser UI
   const updateViewportHeight = useCallback(() => {
@@ -197,21 +199,29 @@ const FactoryTourMobile: React.FC = () => {
       updateViewportHeight();
     };
 
-    if ('visualViewport' in window) {
-      window.visualViewport?.addEventListener('resize', handleViewportChange);
+    if ("visualViewport" in window) {
+      window.visualViewport?.addEventListener("resize", handleViewportChange);
     }
-    
-    window.addEventListener('resize', handleViewportChange);
-    window.addEventListener('orientationchange', handleViewportChange);
+
+    window.addEventListener("resize", handleViewportChange);
+    window.addEventListener("orientationchange", handleViewportChange);
 
     return () => {
-      if ('visualViewport' in window) {
-        window.visualViewport?.removeEventListener('resize', handleViewportChange);
+      if ("visualViewport" in window) {
+        window.visualViewport?.removeEventListener(
+          "resize",
+          handleViewportChange
+        );
       }
-      window.removeEventListener('resize', handleViewportChange);
-      window.removeEventListener('orientationchange', handleViewportChange);
+      window.removeEventListener("resize", handleViewportChange);
+      window.removeEventListener("orientationchange", handleViewportChange);
     };
   }, [updateViewportHeight]);
+
+  useEffect(() => {
+    // Update showDisplayBoard based on currentFrame
+    setShowDisplayBoard(currentFrame >= 0 && currentFrame <= 45);
+  }, [currentFrame]);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -230,7 +240,7 @@ const FactoryTourMobile: React.FC = () => {
       const canvasHeight = viewportHeight || window.innerHeight;
       const dpr = Math.min(window.devicePixelRatio, 2);
 
-      console.log(canvasWidth, canvasHeight, dpr)
+      console.log(canvasWidth, canvasHeight, dpr);
 
       canvas.width = canvasWidth * dpr;
       canvas.height = canvasHeight * dpr;
@@ -241,13 +251,14 @@ const FactoryTourMobile: React.FC = () => {
 
       context.scale(dpr, dpr);
     };
-    
 
     setCanvasSize();
 
     const frameCount = 3269;
     const currentFrameFn = (index: number) =>
-      `/mobile-sequence/compressed/pillow/${(index + 1).toString().padStart(4, "0")}.webp`;
+      `/mobile-sequence/compressed/pillow/${(index + 1)
+        .toString()
+        .padStart(4, "0")}.webp`;
 
     const images: HTMLImageElement[] = [];
     const tour = { frame: 0 };
@@ -277,22 +288,25 @@ const FactoryTourMobile: React.FC = () => {
     }
 
     const drawFrame = (frameIndex: number) => {
-      const index = Math.min(Math.max(Math.floor(frameIndex), 0), frameCount - 1);
+      const index = Math.min(
+        Math.max(Math.floor(frameIndex), 0),
+        frameCount - 1
+      );
       if (index === lastFrame) return;
       lastFrame = index;
       setCurrentFrame(index);
-    
+
       const img = images[index];
       if (img && img.complete) {
         const canvasWidth = window.innerWidth;
         const canvasHeight = viewportHeight || window.innerHeight;
         context.clearRect(0, 0, canvasWidth, canvasHeight);
-    
+
         const canvasAspect = canvasWidth / canvasHeight;
         const imgAspect = img.width / img.height;
-    
+
         let drawWidth, drawHeight, srcX, srcY;
-    
+
         if (canvasAspect > imgAspect) {
           // Canvas is wider, crop top/bottom
           drawWidth = img.width;
@@ -306,18 +320,23 @@ const FactoryTourMobile: React.FC = () => {
           srcX = (img.width - drawWidth) / 2;
           srcY = 0;
         }
-    
+
         const srcWidth = drawWidth;
         const srcHeight = drawHeight;
-    
+
         context.drawImage(
           img,
-          srcX, srcY, srcWidth, srcHeight, // source crop
-          0, 0, canvasWidth, canvasHeight  // destination fit
+          srcX,
+          srcY,
+          srcWidth,
+          srcHeight, // source crop
+          0,
+          0,
+          canvasWidth,
+          canvasHeight // destination fit
         );
       }
     };
-    
 
     let scrollTriggerInstance: ScrollTrigger | null = null;
 
@@ -370,18 +389,20 @@ const FactoryTourMobile: React.FC = () => {
   }, [imagesLoaded, viewportHeight]);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="h-[10000px] bg-black flex justify-center relative overflow-hidden"
     >
-      {isLoading && <FullPageLoader percentage={loadPercentage} isVisible={isLoading} />}
-      
+      {isLoading && (
+        <FullPageLoader percentage={loadPercentage} isVisible={isLoading} />
+      )}
+
       <canvas
         id="canvas"
         ref={canvasRef}
         className="fixed top-0 left-0 w-full object-cover z-10"
         style={{
-          height: `${viewportHeight || '100vh'}`,
+          height: `${viewportHeight || "100vh"}`,
           opacity: imagesLoaded ? 1 : 0,
           transition: "opacity 0.5s ease-in-out",
         }}
@@ -389,9 +410,11 @@ const FactoryTourMobile: React.FC = () => {
 
       {/* Content overlay */}
       <div className="fixed inset-0 pointer-events-none z-20">
+      <DigitalDisplayBoard isVisible={showDisplayBoard} currentFrame={currentFrame} />
         {frameRanges.map(({ key, startFrame, endFrame }) => {
           const content = staticContent[key];
-          const isVisible = currentFrame >= startFrame && currentFrame <= endFrame;
+          const isVisible =
+            currentFrame >= startFrame && currentFrame <= endFrame;
           const scrollProgress = isVisible
             ? Math.min((currentFrame - startFrame) / (endFrame - startFrame), 1)
             : 0;
