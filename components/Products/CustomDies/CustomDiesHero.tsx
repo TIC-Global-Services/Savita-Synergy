@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import CustomDiesHeroImg from '@/assets/Product/CustomDies/custom-dies.jpg'
+import CustomDiesHeroImg from '@/assets/Product/CustomDies/Dies-Banner.jpeg'
 
 const CustomDiesHero: React.FC = () => {
   const { scrollY } = useScroll();

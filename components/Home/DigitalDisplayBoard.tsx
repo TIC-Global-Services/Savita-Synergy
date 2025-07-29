@@ -96,7 +96,7 @@ export const DigitalDisplayBoard: React.FC<DigitalDisplayBoardProps> = ({ isVisi
               SAVITA SYNERGY PRICES
             </div>
             <div className="text-right">
-              <div className="text-[8px] sm:text-xl font-bold">{formatTime(currentTime)}</div>
+              <div className="text-[6px] sm:text-base font-bold">{formatTime(currentTime)}</div>
               <div className="text-[6px] sm:text-base opacity-75">{formatDate(currentTime)}</div>
             </div>
           </div>
@@ -114,7 +114,7 @@ export const DigitalDisplayBoard: React.FC<DigitalDisplayBoardProps> = ({ isVisi
               }}
             >
               {priceData.map((item, index) => (
-                <div key={index} className="flex items-center mx-6 sm:mx-16">
+                <div key={index} className="flex items-center ">
                   <span className="text-green-400 text-base sm:text-xl tracking-wide">{item.product}:</span>
                   <span className="text-yellow-400 mx-2 sm:mx-4 font-bold text-xl sm:text-2xl">{item.price}</span>
                   <span className="text-green-400 text-base sm:text-xl">{item.unit}</span>
@@ -136,12 +136,7 @@ export const DigitalDisplayBoard: React.FC<DigitalDisplayBoardProps> = ({ isVisi
               ))}
             </motion.div>
 
-            {/* Blinking Cursor Effect */}
-            <motion.div
-              className="absolute right-3 sm:right-6 top-1/2 transform -translate-y-1/2 w-2 sm:w-3 h-8 sm:h-12 bg-green-400"
-              animate={{ opacity: [1, 0, 1] }}
-              transition={{ duration: 1, repeat: Infinity }}
-            />
+            
           </div>
 
           {/* Scanline Effect */}

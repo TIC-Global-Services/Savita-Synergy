@@ -96,7 +96,7 @@ const ServicesCTA: React.FC = () => {
                 >
                     <Link
                         href="/contact"
-                        className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 bg-synergy-dark-100 text-primary  rounded-full text-base sm:text-lg hover:bg-synergy-dark-300 transition-all duration-300 shadow-lg hover:shadow-xl focus:outline-none "
+                        className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 bg-lighter font-bold text-white   rounded-full text-base sm:text-lg hover:bg-primary transition-all duration-300 shadow-lg hover:shadow-xl focus:outline-none "
                         aria-label="Contact us for inquiries"
                     >
                         Enquire Now <ArrowUpRight />

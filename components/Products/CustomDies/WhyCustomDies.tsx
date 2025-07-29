@@ -3,7 +3,7 @@ import React from 'react'
 import { motion, type Variants } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import WhyCustomDiesImg from '@/assets/Product/CustomDies/WhyCustomDies.jpg'
+import WhyCustomDiesImg from '@/assets/Product/CustomDies/WhyCustomDies.png'
 import { MdCheckCircle } from 'react-icons/md';
 
 const WhyCustomDies = () => {

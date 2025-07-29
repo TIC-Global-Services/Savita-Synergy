@@ -3,7 +3,7 @@ import React from 'react'
 import { motion, type Variants } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import WhyCustomDiesImg from '@/assets/Product/CustomDies/WhyCustomDies.jpg'
+import WhyBilletsImg from '@/assets/Product/Ignots/why-billets.png'
 import { MdCheckCircle } from 'react-icons/md';
 
 const WhyIgnotsBillets = () => {
@@ -74,7 +74,7 @@ const WhyIgnotsBillets = () => {
                     variants={imageVariants}
                 >
                     <Image
-                        src={WhyCustomDiesImg}
+                        src={WhyBilletsImg}
                         alt="Why Custom Dies"
                         className="rounded-2xl w-full h-auto object-cover"
                         width={600}

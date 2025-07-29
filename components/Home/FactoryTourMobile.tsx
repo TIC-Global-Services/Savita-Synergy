@@ -146,15 +146,15 @@ const staticContent: StaticContentMap = {
     position: "bottom-20 left-6",
   },
   22: {
+    title: "Installation",
+    desc: "After fabrication the aluminium profiles are delivered and install exactly as per the user's specifications.",
+    position: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full",
+  },
+  24: {
     title: "Contact Us",
     desc: "Get in touch with our team for inquiries.",
     linkText: "Contact Now",
     slug: "contact",
-    position: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full",
-  },
-  24: {
-    title: " ",
-    desc: " ",
     position: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
   },
 };
@@ -171,6 +171,7 @@ const frameRanges: { key: number; startFrame: number; endFrame: number }[] = [
   { key: 18, startFrame: 2650, endFrame: 2780 },
   { key: 20, startFrame: 2770, endFrame: 2950 },
   { key: 22, startFrame: 3030, endFrame: 3140 },
+  { key: 24, startFrame: 3140, endFrame: 3269 },
 ];
 
 const FactoryTourMobile: React.FC = () => {

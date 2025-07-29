@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import React from 'react';
-import CustomDiesQuoteImg from '@/assets/Product/CustomDies/CustomDiesQuote.jpg';
+import AnodizingSecondImg from '@/assets/Services/Anodizing/Anodizing-second.png';
 import { motion, type Variants } from 'framer-motion';
 
 // Animation variants for text with staggered children
@@ -70,8 +70,8 @@ const AnodizingSecond = () => {
                     whileHover="hover"
                 >
                     <Image
-                        src={CustomDiesQuoteImg}
-                        alt="Custom Aluminium Extrusion Dies"
+                        src={AnodizingSecondImg}
+                        alt="Anodizing Second"
                         className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500"
                         width={600}
                         height={400}

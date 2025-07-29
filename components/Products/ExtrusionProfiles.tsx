@@ -61,14 +61,14 @@ const ExtrusionProfiles: React.FC = () => {
                             custom={index}
                         >
                             {/* Product Card */}
-                            <Link href={`/products/${product.slug}`} className="block w-full h-full bg-synergy-dark-300 rounded-2xl p-6">
+                            <Link href={`/products/${product.slug}`} className="block w-full h-full bg-synergy-dark-300 rounded-2xl p-4">
                                 <Image
                                     src={product.img}
                                     alt={`${product.name} product image`}
-                                    className="object-cover aspect-square w-full rounded-xl"
+                                    className="object-cover aspect-video w-full rounded-xl"
                                     priority={index === 0}
                                 />
-                                <div className="flex items-center gap-2 mt-4 text-lighter">
+                                <div className="flex items-center gap-2 mt-4 text-primary font-medium">
                                     <h2 className="text-xl sm:text-2xl">{product.name}</h2>
                                     <ArrowRightIcon className="w-4 h-4" />
                                 </div>

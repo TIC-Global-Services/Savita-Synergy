@@ -3,8 +3,8 @@ import React from 'react';
 import { motion, type Variants } from 'framer-motion';
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
-import Anodizing from '@/assets/Services/Anodizing.jpg';
-import PowerCoating from '@/assets/Services/PowerCoating.png';
+import Anodizing from '@/assets/Services/Anodizing.png';
+import PowerCoating from '@/assets/Services/Powder coating 1.jpeg';
 import CustomFabrication from '@/assets/Services/CustomFabrication.png';
 
 interface Service {
@@ -54,7 +54,7 @@ const ServicesExplore: React.FC = () => {
     const services: Service[] = [
         {
             title: 'Anodizing',
-            desc: 'Our in-house capabilities include precision cutting, machining, and finishing services, enabling end-to-end customization of aluminum products.',
+            desc: 'At Savita Synergy, we deliver high quality anodized aluminium finishes designed for long term durability and aesthetic appeal. As a trusted anodized aluminium manufacturer in India, we serve both architectural and industrial applications. Our advanced aluminium anodizing process creates a hard, protective layer that resists chipping, peeling, rust, and fading, ensuring a reliable and lasting surface finish.',
             img: Anodizing,
             link: '/services/anodizing',
         },

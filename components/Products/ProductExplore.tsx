@@ -18,8 +18,8 @@ const ProductExplore = () => {
       img: Extrusion,
     },
     {
-      name: 'Ignots & Billets',
-      slug: 'ignots-and-billets',
+      name: 'Ingots & Billets',
+      slug: 'ingots-and-billets',
       img: Ignots,
     },
     {

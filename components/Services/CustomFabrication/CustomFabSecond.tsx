@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import React from 'react';
-import CustomDiesQuoteImg from '@/assets/Product/CustomDies/CustomDiesQuote.jpg';
+import CustomDiesQuoteImg from '@/assets/Services/CustomFabrication.png';
 import { motion, type Variants } from 'framer-motion';
 
 // Animation variants for text with staggered children

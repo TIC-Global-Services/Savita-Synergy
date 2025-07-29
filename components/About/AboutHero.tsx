@@ -69,7 +69,7 @@ const AboutHero: React.FC = () => {
         >
           <Link
             href="/contact"
-            className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 lg:px-6 lg:py-3 bg-white text-black rounded-full border border-white/30 hover:bg-white/80 transition-colors text-xs sm:text-sm md:text-base"
+            className="inline-flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-4 bg-lighter font-bold text-white   rounded-full text-base sm:text-lg hover:bg-primary transition-all duration-300 shadow-lg hover:shadow-xl focus:outline-none "
           >
             Contact Us
           </Link>

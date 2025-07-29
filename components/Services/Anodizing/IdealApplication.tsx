@@ -3,7 +3,8 @@ import React from 'react'
 import { motion, type Variants } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import WhyCustomDiesImg from '@/assets/Product/CustomDies/WhyCustomDies.jpg'
+import IdealApplicationImg from '@/assets/Services/Anodizing/Anodized profile 4.1.jpeg'
+import IdealApplicationImg2 from '@/assets/Services/Anodizing/Anodized profile 4.1.png'
 import { MdCheckCircle } from 'react-icons/md';
 
 const IdealApplication = () => {
@@ -55,15 +56,24 @@ const IdealApplication = () => {
 
                 {/* Image */}
                 <motion.div
-                    className="w-full"
+                    className="w-full flex flex-col gap-4"
                     initial="hidden"
                     animate="visible"
                     variants={imageVariants}
                 >
                     <Image
-                        src={WhyCustomDiesImg}
-                        alt="Why Custom Dies"
-                        className="rounded-2xl w-full  object-cover"
+                        src={IdealApplicationImg}
+                        alt="Ideal Application"
+                        className="rounded-t-2xl aspect-[16/6]  object-cover"
+                        width={600}
+                        height={400}
+                        priority
+                    />
+
+                    <Image
+                        src={IdealApplicationImg2}
+                        alt="Ideal Application"
+                        className="rounded-b-2xl aspect-[16/6]  object-cover"
                         width={600}
                         height={400}
                         priority

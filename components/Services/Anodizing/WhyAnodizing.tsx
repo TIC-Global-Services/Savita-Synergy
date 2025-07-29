@@ -3,7 +3,9 @@ import React from 'react'
 import { motion, type Variants } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import WhyCustomDiesImg from '@/assets/Product/CustomDies/WhyCustomDies.jpg'
+import WhyAnodizingImg from '@/assets/Services/Anodizing/Anodized profile 3.1.png'
+import WhyAnodizingImg2 from '@/assets/Services/Anodizing/Anodized profile 3.2.png'
+import WhyAnodizingImg3 from '@/assets/Services/Anodizing/Anodized profile 3.3.png'
 import { MdCheckCircle } from 'react-icons/md';
 
 const WhyAnodizing = () => {
@@ -36,11 +38,28 @@ const WhyAnodizing = () => {
                     initial="hidden"
                     animate="visible"
                     variants={imageVariants}
+                    className=' flex flex-col gap-4'
                 >
                     <Image
-                        src={WhyCustomDiesImg}
-                        alt="Why Custom Dies"
-                        className="  w-full h-dvh object-cover"
+                        src={WhyAnodizingImg}
+                        alt="Why Anodizing"
+                        className="  aspect-[16/6] rounded-t-2xl object-cover"
+                        width={600}
+                        height={400}
+                        priority
+                    />
+                    <Image
+                        src={WhyAnodizingImg2}
+                        alt="Why Anodizing"
+                        className="  aspect-[16/6] object-cover"
+                        width={600}
+                        height={400}
+                        priority
+                    />
+                    <Image
+                        src={WhyAnodizingImg3}
+                        alt="Why Anodizing"
+                        className="  aspect-[16/6] rounded-b-2xl object-cover"
                         width={600}
                         height={400}
                         priority

@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import CoatingHeroImg from '@/assets/Services/PowerCoating.png'
+import CoatingHeroImg from '@/assets/Services/PowderCoating/Powder Coating Banner.png'
 
 const PowderCoatingHero: React.FC = () => {
   const { scrollY } = useScroll();

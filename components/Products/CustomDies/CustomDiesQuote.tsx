@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import CustomDiesQuoteImg from '@/assets/Product/CustomDies/CustomDiesQuote.jpg';
+import CustomDiesQuoteImg from '@/assets/Product/CustomDies/CustomDiesQuote.png';
 import { motion, type Variants } from 'framer-motion';
 
 const CustomDiesQuote = () => {

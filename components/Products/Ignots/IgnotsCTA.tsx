@@ -80,7 +80,7 @@ const IgnotsCTA: React.FC = () => {
                     className="text-2xl sm:text-3xl font-bold   tracking-tight leading-tight"
                     variants={headingVariants}
                 >
-                    Aluminum Ignots
+                    Aluminium Ingots
                 </motion.h1>
                 <motion.p variants={headingVariants} className=' text-lg'>
                     Our aluminium ingots are produced using advanced melting and casting techniques to achieve high purity and excellent metallurgical properties. These ingots are ideal for remelting and are widely used across various sectors such as automotive, electrical, construction, and general engineering.
