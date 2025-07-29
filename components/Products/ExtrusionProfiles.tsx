@@ -68,9 +68,9 @@ const ExtrusionProfiles: React.FC = () => {
                                     className="object-cover aspect-video w-full rounded-xl"
                                     priority={index === 0}
                                 />
-                                <div className="flex items-center gap-2 mt-4 text-primary font-medium">
+                                <div className="flex items-center gap-2 mt-4 text-secondary font-bold">
                                     <h2 className="text-xl sm:text-2xl">{product.name}</h2>
-                                    <ArrowRightIcon className="w-4 h-4" />
+                                    <ArrowRightIcon  />
                                 </div>
                             </Link>
                         </motion.div>

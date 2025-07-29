@@ -100,9 +100,9 @@ const ProductExplore = () => {
                 className="object-cover aspect-square w-full rounded-xl"
                 priority={index === 0}
               />
-              <div className="flex items-center gap-2 mt-4 text-primary">
-                <h2 className=" text-xl font-semibold">{product.name}</h2>
-                <ArrowRightIcon className="w-4 h-4" />
+              <div className="flex items-center gap-2 mt-4 text-secondary">
+                <h2 className=" text-xl font-bold">{product.name}</h2>
+                <ArrowRightIcon  />
               </div>
             </Link>
           </motion.div>
