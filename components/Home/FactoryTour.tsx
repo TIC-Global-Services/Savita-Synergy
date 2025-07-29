@@ -438,7 +438,7 @@ const FactoryTour = () => {
             style={{ pointerEvents: "all" }}
             onContextMenu={(e) => e.preventDefault()}
           />
-          <DigitalDisplayBoard isVisible={showDisplayBoard} />
+          {/* <DigitalDisplayBoard isVisible={showDisplayBoard} /> */}
           {Object.entries(staticContent).map(([frameIndex, content]) => {
             const index = parseInt(frameIndex);
             if (index === 0) return null;
