@@ -13,9 +13,10 @@ interface PriceItem {
 interface DigitalDisplayBoardProps {
   isVisible: boolean;
   currentFrame: number; // Add currentFrame as a prop
+  isMobile: boolean;
 }
 
-export const DigitalDisplayBoard: React.FC<DigitalDisplayBoardProps> = ({ isVisible, currentFrame }) => {
+export const DigitalDisplayBoard: React.FC<DigitalDisplayBoardProps> = ({ isVisible, currentFrame, isMobile }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   // Sample price data

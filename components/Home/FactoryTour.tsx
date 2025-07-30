@@ -1,13 +1,12 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, AnimatePresence } from "framer-motion";
-import { DigitalDisplayBoard } from "./DigitalDisplayBoard";
 import Link from "next/link";
-
-// Register ScrollTrigger plugin
-gsap.registerPlugin(ScrollTrigger);
+import FullPageLoader from "../Reusable/FullPageLoader";
+import { DigitalDisplayBoard } from "./DigitalDisplayBoard";
 
 type StaticContentProps = {
   title: string;
@@ -29,16 +28,8 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
   slug,
   position,
   isVisible,
-  scrollProgress,
 }) => {
-  const titleWords = title.split(" ");
-  const descWords = desc ? desc.split(" ") : [];
-  const totalWords = titleWords.length + descWords.length;
-  const safeScrollProgress =
-    typeof scrollProgress === "number" ? scrollProgress : 0;
-  const wordsToShow = Math.floor(safeScrollProgress * (totalWords + 1));
-  const showLink =
-    linkText && slug && wordsToShow >= totalWords && safeScrollProgress > 0.8;
+  const showLink = linkText && slug;
 
   return (
     <AnimatePresence mode="wait">
@@ -47,48 +38,29 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2, ease: "easeInOut" }}
-          className={`absolute text-white p-4 rounded w-full max-w-xl ${position}`}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className={`fixed text-white p-6 rounded-lg z-30 max-w-sm md:max-w-xl ${position}`}
+          style={{
+            pointerEvents: "auto",
+          }}
         >
-          <h2 className="text-xl md:text-3xl mb-2 font-bold">
-            {titleWords.map((word, index) => (
-              <motion.span
-                key={`title-${index}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: index < wordsToShow ? 1 : 0 }}
-                transition={{ duration: 0.2, delay: 0 }}
-                className="inline-block mr-1"
-              >
-                {word}
-              </motion.span>
-            ))}
+          <h2 className="text-xl mb-3 font-bold leading-tight text-lighter text-shadow-md">
+            {title}
           </h2>
           {desc && (
-            <p className="text-sm md:text-base mb-4">
-              {descWords.map((word, index) => (
-                <motion.span
-                  key={`desc-${index}`}
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    opacity: index + titleWords.length < wordsToShow ? 1 : 0,
-                  }}
-                  transition={{ duration: 0.2, delay: 0 }}
-                  className="inline-block mr-1"
-                >
-                  {word}
-                </motion.span>
-              ))}
+            <p className="text-sm mb-4 leading-relaxed text-gray-200 text-shadow-md">
+              {desc}
             </p>
           )}
           {showLink && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.2, delay: 0 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
             >
               <Link
                 href={`/${slug}`}
-                className="text-center px-6 py-2 bg-lighter rounded-full hover:bg-primary transition-colors"
+                className="inline-block text-center px-4 py-2 bg-lighter/60 backdrop-blur-sm rounded-full hover:bg-lighter/90 transition-all duration-300 text-sm font-medium border border-lighter/30 hover:border-lighter/50"
               >
                 {linkText}
               </Link>
@@ -100,71 +72,68 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
   );
 };
 
-// Content mapping for static videos
 const staticContent: StaticContentMap = {
   0: {
     title: "Introduction",
     desc: "Welcome to our factory tour, showcasing our innovative processes.",
     linkText: "Learn More",
     slug: "introduction",
-    position: "bottom-10 left-10",
+    position: "bottom-20 left-6",
   },
   2: {
     title: "Who Are We",
-    desc: "At Savita Synergy, we offer end-to-end aluminum solutions — from aluminum scrap to finished products. As a leading aluminum trading and manufacturing company in India, we serve diverse industries with reliable processing, finishing, and distribution services. With facilities like AL13 Metal and HPG Coaters, and a presence across major cities, we deliver quality, consistency, and service at every step.",
+    desc: "At Savita Synergy, we offer end-to-end aluminum solutions — from aluminum scrap to finished products. As a leading aluminum trading and manufacturing company in India, we serve diverse industries with reliable processing, finishing, and distribution services.",
     linkText: "Our Story",
     slug: "about",
-    position: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+    position: "top-20 left-1/2 -translate-x-1/2 w-full",
   },
   4: {
     title: "What We Do",
-    desc: "We offer a diverse range of aluminum products including high-quality aluminum scrap for recycling, precision-grade ingots and billets for casting and extrusion, and versatile extruded profiles for construction, automotive, and industrial applications. We also design and manufacture custom dies to meet specific client requirements with high precision.",
-    position:
-      "top-20 left-1/2 -translate-x-1/2 justify-start items-start flex flex-col",
+    desc: "We offer a diverse range of aluminum products including high-quality aluminum scrap for recycling, precision-grade ingots and billets for casting and extrusion, and versatile extruded profiles for construction, automotive, and industrial applications.",
+    position: "top-20 left-1/2 -translate-x-1/2 w-full",
   },
   6: {
     title: "Aluminum Scrap",
     desc: "Reliable material for recycling & manufacturing",
-    position:
-      "top-20 md:left-1/3 md:-translate-x-1/2 justify-start items-start flex flex-col",
+    position: "top-20 left-6 md:left-1/3 md:-translate-x-1/2",
     linkText: "Know More",
     slug: "products/aluminum-scrap",
   },
   8: {
     title: "Scrap Melting",
     desc: "Enhancing Quality Through Purity & Precision.",
-    position: "top-20 md:top-40 md:left-20",
+    position: "top-20 right-6 md:top-40 md:left-20 md:right-auto",
   },
   10: {
     title: "Ingots and Billets",
     desc: "Quality Ingots & Billets for Precision Profiles",
     linkText: "Explore More",
     slug: "products/ignots-and-billets",
-    position: "top-1/2 md:left-1/3 md:-translate-x-1/2 -translate-y-1/2",
+    position: "top-[30%] left-1/2 -translate-x-1/2 w-full",
   },
   12: {
     title: "Extrusion Process with Custom Dies",
     desc: "Precision-Made Profiles Start Here, From Custom Dies to Finished Extrusions.",
-    position: "top-10 md:left-10",
+    position: "top-[10%] left-6",
     linkText: "Explore More",
     slug: "products/extrusions-and-profiles",
   },
   14: {
     title: "Aluminum Services",
-    desc: "Our value-added services include anodizing for durable, corrosion-resistant finishes and powder coating in a wide variety of colors and textures for enhanced protection. We also provide custom fabrication, cutting, and finishing services, enabling complete, end-to-end aluminum solutions.",
-    position: "top-10 md:left-1/2 md:-translate-x-1/2",
+    desc: "Our value-added services include anodizing for durable, corrosion-resistant finishes and powder coating in a wide variety of colors and textures for enhanced protection.",
+    position: "top-[10%] left-1/2 -translate-x-1/2 w-full",
   },
   16: {
     title: "Anodizing",
     desc: "Durable, corrosion-resistant surface finish.",
-    position: "top-10 left-1/2 -translate-x-1/2",
+    position: "top-[10%] left-1/2 -translate-x-1/2 w-full",
     linkText: "Explore More",
     slug: "services/anodizing",
   },
   18: {
     title: "Powder Coating",
     desc: "Premium textures & colors for aluminum.",
-    position: "bottom-10 md:left-10",
+    position: "bottom-20 left-6",
     linkText: "Explore More",
     slug: "services/powder-coating",
   },
@@ -173,291 +142,321 @@ const staticContent: StaticContentMap = {
     desc: "End-to-end cutting, machining & finishing.",
     linkText: "Explore Services",
     slug: "services/custom-fabrication",
-    position: "bottom-10 md:left-1/6",
+    position: "bottom-20 left-6",
   },
   22: {
+    title: "Installation",
+    desc: "After fabrication, the aluminum profiles are delivered and installed exactly as per the user's specifications.",
+    position: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full",
+  },
+  24: {
     title: "Contact Us",
     desc: "Get in touch with our team for inquiries.",
     linkText: "Contact Now",
     slug: "contact",
-    position: "top-1/2 left-1/2 -translate-x-1/2",
-  },
-  24: {
-    title: " ",
-    desc: " ",
-    // linkText: 'Submit Form',
-    // slug: 'contact-form',
     position: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
   },
 };
 
-// Define video public IDs for desktop and mobile
-const desktopVideoPublicIds = [
-  "frame_1_n7t142",
-  "frame_2_tmmfln",
-  "frame_3_zqarir",
-  "frame_4_pahwur",
-  "frame_5_fyeydp",
-  "frame_6_lrhldh",
-  "frame_7_ekvkxp",
-  "frame_8_kqcg9r",
-  "frame_9_s0fiix",
-  "frame_10_cpt363",
-  "frame_11_zltirx",
-  "frame_12_final_gtrifq",
-  "frame_13_ssjmdk",
-  "frame_14_l9g3is",
-  "frame_15_trimmed_zslodq",
-  "frame_16_q1umul",
-  "frame_17_c2re25",
-  "frame_18_g6qfm3",
-  "frame_19_we8ga1",
-  "frame_20_rq9a7o",
-  "frame_21_xpixex",
-  "frame_22_c3dc50",
-  "frame_23_irpnpf",
-  "frame_24_nzwd2a",
-  "frame_25_znbyzk",
+const mobileFrameRanges: { key: number; startFrame: number; endFrame: number }[] = [
+  { key: 2, startFrame: 50, endFrame: 70 },
+  { key: 4, startFrame: 340, endFrame: 480 },
+  { key: 6, startFrame: 630, endFrame: 780 },
+  { key: 8, startFrame: 880, endFrame: 1020 },
+  { key: 10, startFrame: 1150, endFrame: 1350 },
+  { key: 12, startFrame: 1800, endFrame: 2060 },
+  { key: 14, startFrame: 2150, endFrame: 2320 },
+  { key: 16, startFrame: 2330, endFrame: 2500 },
+  { key: 18, startFrame: 2650, endFrame: 2780 },
+  { key: 20, startFrame: 2770, endFrame: 2950 },
+  { key: 22, startFrame: 3030, endFrame: 3140 },
+  { key: 24, startFrame: 3140, endFrame: 3269 },
 ];
 
-// Define mobile video public IDs (replace with actual IDs)
-const mobileVideoPublicIds = [
-  "1_te45rv",
-  "2_j9qzxi",
-  "3_vsonkm",
-  "mobile_frame_4_placeholder",
-  "mobile_frame_5_placeholder",
-  "mobile_frame_6_placeholder",
-  "mobile_frame_7_placeholder",
-  "mobile_frame_8_placeholder",
-  "mobile_frame_9_placeholder",
-  "mobile_frame_10_placeholder",
-  "mobile_frame_11_placeholder",
-  "mobile_frame_12_placeholder",
-  "mobile_frame_13_placeholder",
-  "mobile_frame_14_placeholder",
-  "mobile_frame_15_placeholder",
-  "mobile_frame_16_placeholder",
-  "mobile_frame_17_placeholder",
-  "mobile_frame_18_placeholder",
-  "mobile_frame_19_placeholder",
-  "mobile_frame_20_placeholder",
-  "mobile_frame_21_placeholder",
-  "mobile_frame_22_placeholder",
-  "mobile_frame_23_placeholder",
-  "mobile_frame_24_placeholder",
-  "mobile_frame_25_placeholder",
+const desktopFrameRanges: { key: number; startFrame: number; endFrame: number }[] = [
+  { key: 2, startFrame:110, endFrame: 150 },
+  { key: 4, startFrame: 399, endFrame: 563 },
+  { key: 6, startFrame: 740, endFrame: 885 },
+  { key: 8, startFrame: 995, endFrame: 1100 },
+  { key: 10, startFrame: 1249, endFrame: 1484 },
+  { key: 12, startFrame: 1942, endFrame: 2217 },
+  { key: 14, startFrame: 2300, endFrame: 2422 },
+  { key: 16, startFrame: 2534, endFrame: 2634 },
+  { key: 18, startFrame: 2909, endFrame: 3000 },
+  { key: 20, startFrame: 3080, endFrame: 3261 },
+  { key: 22, startFrame: 3455, endFrame: 3550 },
+  { key: 24, startFrame: 3580, endFrame: 3706 },
 ];
 
-const FactoryTour = () => {
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>(Array(25).fill(null));
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const [visibleContent, setVisibleContent] = useState<number | null>(null);
+const FactoryTour: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadPercentage, setLoadPercentage] = useState(0);
+  const [currentFrame, setCurrentFrame] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(0);
   const [showDisplayBoard, setShowDisplayBoard] = useState<boolean>(false);
-  const [contentProgress, setContentProgress] = useState<number>(0);
-  const [isClient, setIsClient] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Detect mobile device and handle resize
-  useEffect(() => {
-    const checkMobile = () => {
-      // Use window.innerWidth for simplicity; adjust threshold as needed
-      const mobileThreshold = 768; // Common mobile breakpoint
-      setIsMobile(window.innerWidth <= mobileThreshold);
-    };
-
-    checkMobile(); // Initial check
-    window.addEventListener("resize", checkMobile);
-
-    setIsClient(true);
-    setVisibleContent(0);
-    setShowDisplayBoard(true);
-
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-    };
+  // Device detection
+  const updateDeviceType = useCallback(() => {
+    const mobile = window.innerWidth <= 768; // Adjust threshold as needed
+    setIsMobile(mobile);
   }, []);
 
+  // Track viewport height changes
+  const updateViewportHeight = useCallback(() => {
+    const vh = window.visualViewport?.height || window.innerHeight;
+    setViewportHeight(vh);
+    return vh;
+  }, []);
+
+  // Debounced resize handler
+  const handleResize = useCallback(() => {
+    if (resizeTimeoutRef.current) {
+      clearTimeout(resizeTimeoutRef.current);
+    }
+    resizeTimeoutRef.current = setTimeout(() => {
+      updateViewportHeight();
+      updateDeviceType();
+    }, 100);
+  }, [updateViewportHeight, updateDeviceType]);
+
   useEffect(() => {
-    if (!isClient) return;
+    updateViewportHeight();
+    updateDeviceType();
 
-    const videos = videoRefs.current;
-
-    if (!sectionRef.current || videos.some((video) => !video)) {
-      console.error("Section or video refs are not initialized");
-      return;
+    if ("visualViewport" in window) {
+      window.visualViewport?.addEventListener("resize", handleResize);
     }
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("orientationchange", handleResize);
 
-    // Select video public IDs based on device
-    const videoPublicIds = isMobile
-      ? mobileVideoPublicIds
-      : desktopVideoPublicIds;
-
-    // Preload all videos
-    videos.forEach((video, index) => {
-      if (video) {
-        video.src = `https://res.cloudinary.com/dxks5qn1d/video/upload/${
-          isMobile ? "v1753350441" : "v1752829241"
-        }/${videoPublicIds[index]}.mp4`;
-        video.load();
+    return () => {
+      if ("visualViewport" in window) {
+        window.visualViewport?.removeEventListener("resize", handleResize);
       }
-    });
-
-    // Set initial state: video1 visible and playing, others hidden
-    gsap.set(videos.slice(1).filter(Boolean), { autoAlpha: 0 });
-    const firstVideo = videos[0] as HTMLVideoElement | null;
-    if (firstVideo) {
-      firstVideo.loop = true;
-      const playPromise = firstVideo.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((error: unknown) => {
-          console.error("Error playing first video:", error);
-        });
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("orientationchange", handleResize);
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
       }
-    }
+    };
+  }, [handleResize]);
 
-    const safePlayVideo = (
-      video: HTMLVideoElement,
-      shouldLoop: boolean = false
-    ) => {
-      if (video.readyState >= 2) {
-        video.loop = shouldLoop;
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((error: unknown) => {
-            console.error("Error playing video:", error);
-          });
-        }
+  useEffect(() => {
+    setShowDisplayBoard(currentFrame >= 0 && currentFrame <= (isMobile ? 45 : 53));
+  }, [currentFrame, isMobile]);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
+
+    const setCanvasSize = () => {
+      const canvasWidth = window.innerWidth;
+      const canvasHeight = viewportHeight || window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio, 2);
+
+      canvas.width = canvasWidth * dpr;
+      canvas.height = canvasHeight * dpr;
+      canvas.style.width = `${canvasWidth}px`;
+      canvas.style.height = `${canvasHeight}px`;
+      canvas.style.left = "0px";
+      canvas.style.top = "0px";
+
+      context.scale(dpr, dpr);
+    };
+
+    setCanvasSize();
+
+    const frameCount = isMobile ? 3269 : 3706;
+    const currentFrameFn = (index: number) =>
+      `${isMobile ? "/mobile-sequence" : "/desktop-sequence"}/compressed/pillow/${(index + 1)
+        .toString()
+        .padStart(4, "0")}.webp`;
+
+    const images: HTMLImageElement[] = [];
+    const tour = { frame: 0 };
+    let loadedCount = 0;
+    let lastFrame = -1;
+
+    const checkAllLoaded = () => {
+      loadedCount++;
+      setLoadPercentage((loadedCount / frameCount) * 100);
+      if (loadedCount === frameCount) {
+        setImagesLoaded(true);
+        drawFrame(0);
+        setIsLoading(false);
       }
     };
 
-    const pauseOtherVideos = (activeIndex: number) => {
-      videos.forEach((video, idx) => {
-        if (video && idx !== activeIndex && !video.paused) {
-          video.pause();
-          video.loop = false;
+    for (let i = 0; i < frameCount; i++) {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = checkAllLoaded;
+      img.onerror = () => {
+        console.error(`Failed to load image: ${currentFrameFn(i)}`);
+        checkAllLoaded();
+      };
+      img.src = currentFrameFn(i);
+      images.push(img);
+    }
+
+    const drawFrame = (frameIndex: number) => {
+      const index = Math.min(
+        Math.max(Math.floor(frameIndex), 0),
+        frameCount - 1
+      );
+      if (index === lastFrame) return;
+      lastFrame = index;
+      setCurrentFrame(index);
+
+      const img = images[index];
+      if (img && img.complete) {
+        const canvasWidth = window.innerWidth;
+        const canvasHeight = viewportHeight || window.innerHeight;
+        context.clearRect(0, 0, canvasWidth, canvasHeight);
+
+        const canvasAspect = canvasWidth / canvasHeight;
+        const imgAspect = img.width / img.height;
+
+        let drawWidth, drawHeight, srcX, srcY;
+
+        if (canvasAspect > imgAspect) {
+          drawWidth = img.width;
+          drawHeight = img.width / canvasAspect;
+          srcX = 0;
+          srcY = (img.height - drawHeight) / 2;
+        } else {
+          drawHeight = img.height;
+          drawWidth = img.height * canvasAspect;
+          srcX = (img.width - drawWidth) / 2;
+          srcY = 0;
         }
+
+        const srcWidth = drawWidth;
+        const srcHeight = drawHeight;
+
+        context.drawImage(
+          img,
+          srcX,
+          srcY,
+          srcWidth,
+          srcHeight,
+          0,
+          0,
+          canvasWidth,
+          canvasHeight
+        );
+      }
+    };
+
+    let scrollTriggerInstance: ScrollTrigger | null = null;
+
+    const setupAnimation = () => {
+      if (scrollTriggerInstance) {
+        scrollTriggerInstance.kill();
+      }
+      scrollTriggerInstance = ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 0.5,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          const targetFrame = progress * (frameCount - 1);
+          gsap.to(tour, {
+            frame: targetFrame,
+            duration: 0.3,
+            ease: "power2.out",
+            overwrite: true,
+            onUpdate: () => drawFrame(tour.frame),
+          });
+        },
       });
     };
 
-    const totalFrames = 25;
-    const scrollTrigger = ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: "top top",
-      end: "+=2000%",
-      pin: true,
-      scrub: 1,
-      onUpdate: (self) => {
-        const progress = self.progress;
-        const frameProgress = progress * totalFrames;
-        const currentFrame = Math.floor(frameProgress);
-        let frameLocalProgress = frameProgress - currentFrame;
-        const holdThreshold = 0.85;
-        if (frameLocalProgress >= holdThreshold) {
-          frameLocalProgress = 1;
-        } else {
-          frameLocalProgress = frameLocalProgress / holdThreshold;
-        }
-        const activeFrame = Math.min(currentFrame, totalFrames - 1);
+    if (imagesLoaded) {
+      setupAnimation();
+    }
 
-        if (videos[activeFrame]) {
-          gsap.set(videos[activeFrame], { autoAlpha: 1 });
-          gsap.set(
-            videos.filter((v, idx) => idx !== activeFrame && v),
-            { autoAlpha: 0 }
-          );
+    const handleCanvasResize = () => {
+      setCanvasSize();
+      drawFrame(tour.frame);
+      ScrollTrigger.refresh();
+    };
 
-          const isTransition = activeFrame % 2 === 1;
+    let canvasResizeTimeout: NodeJS.Timeout;
+    const throttledCanvasResize = () => {
+      clearTimeout(canvasResizeTimeout);
+      canvasResizeTimeout = setTimeout(handleCanvasResize, 100);
+    };
 
-          if (isTransition) {
-            const video = videos[activeFrame];
-            if (video) {
-              const videoDuration = video.duration || 10;
-              const rawProgress = frameProgress - currentFrame;
-              video.currentTime = Math.min(
-                rawProgress * videoDuration,
-                videoDuration - 0.1
-              );
-              video.loop = false;
-              if (!video.paused) {
-                video.pause();
-              }
-            }
-            setVisibleContent(null);
-            setShowDisplayBoard(false);
-            setContentProgress(0);
-          } else {
-            const video = videos[activeFrame];
-            if (video && video.paused) {
-              safePlayVideo(video, true);
-            }
-            setContentProgress(frameLocalProgress);
-            if (staticContent.hasOwnProperty(activeFrame)) {
-              setVisibleContent(activeFrame);
-              setShowDisplayBoard(activeFrame === 0);
-            } else {
-              setVisibleContent(null);
-              setShowDisplayBoard(false);
-            }
-          }
-
-          pauseOtherVideos(activeFrame);
-        }
-      },
-    });
+    window.addEventListener("resize", throttledCanvasResize);
 
     return () => {
-      scrollTrigger.kill();
+      clearTimeout(canvasResizeTimeout);
+      window.removeEventListener("resize", throttledCanvasResize);
+      if (scrollTriggerInstance) {
+        scrollTriggerInstance.kill();
+      }
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
-  }, [isClient, isMobile]); // Add isMobile to dependencies
+  }, [imagesLoaded, viewportHeight, isMobile]);
+
+  const frameRanges = isMobile ? mobileFrameRanges : desktopFrameRanges;
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative w-full h-screen overflow-hidden"
+    <div
+      ref={containerRef}
+      className="h-[10000px] bg-black flex justify-center relative overflow-hidden"
     >
-      {isClient && (
-        <>
-          {Array.from({ length: 25 }).map((_, index) => (
-            <video
-              key={index}
-              ref={(el) => {
-                videoRefs.current[index] = el;
-              }}
-              className="absolute top-0 left-0 w-full h-full object-cover"
-              muted
-              playsInline
-              preload="metadata"
-              onContextMenu={(e) => e.preventDefault()}
-              {...(index === 0 ? { loop: true } : {})}
-            />
-          ))}
-          <div
-            className="absolute top-0 left-0 w-full h-full"
-            style={{ pointerEvents: "all" }}
-            onContextMenu={(e) => e.preventDefault()}
-          />
-          {/* <DigitalDisplayBoard isVisible={showDisplayBoard} /> */}
-          {Object.entries(staticContent).map(([frameIndex, content]) => {
-            const index = parseInt(frameIndex);
-            if (index === 0) return null;
-            return (
-              <StaticContent
-                key={index}
-                title={content.title}
-                desc={content.desc}
-                linkText={content.linkText}
-                slug={content.slug}
-                position={content.position}
-                isVisible={visibleContent === index}
-                scrollProgress={contentProgress}
-              />
-            );
-          })}
-        </>
+      {isLoading && (
+        <FullPageLoader percentage={loadPercentage} isVisible={isLoading} />
       )}
-    </section>
+
+      <canvas
+        id="canvas"
+        ref={canvasRef}
+        className="fixed top-0 left-0 w-full object-cover z-10"
+        style={{
+          height: `${viewportHeight || "100vh"}`,
+          opacity: imagesLoaded ? 1 : 0,
+          transition: "opacity 0.5s ease-in-out",
+        }}
+      />
+
+      <div className="fixed inset-0 pointer-events-none z-20">
+        <DigitalDisplayBoard isVisible={showDisplayBoard} currentFrame={currentFrame} isMobile={isMobile} />
+        {frameRanges.map(({ key, startFrame, endFrame }) => {
+          const content = staticContent[key];
+          const isVisible =
+            currentFrame >= startFrame && currentFrame <= endFrame;
+          const scrollProgress = isVisible
+            ? Math.min((currentFrame - startFrame) / (endFrame - startFrame), 1)
+            : 0;
+
+          return (
+            <StaticContent
+              key={key}
+              {...content}
+              isVisible={isVisible}
+              scrollProgress={scrollProgress}
+            />
+          );
+        })}
+      </div>
+    </div>
   );
 };
 
