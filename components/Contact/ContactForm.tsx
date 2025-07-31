@@ -352,7 +352,7 @@ const ContactForm: React.FC = () => {
                 htmlFor="message"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Message <span className="text-red-500" aria-hidden="true">*</span>
+                Tell us briefly what you’re looking for. <span className="text-red-500" aria-hidden="true">*</span>
               </label>
               <textarea
                 id="message"
@@ -373,7 +373,7 @@ const ContactForm: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2 bg-lighter text-white font-semibold rounded-lg hover:bg-primary transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-lighter disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                className="px-6 py-3 bg-lighter text-white font-semibold rounded-full hover:bg-primary transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-lighter disabled:opacity-50 disabled:cursor-not-allowed w-full "
                 aria-label={isSubmitting ? "Sending message" : "Send message"}
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
