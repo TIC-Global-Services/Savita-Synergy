@@ -44,11 +44,11 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
             pointerEvents: "auto",
           }}
         >
-          <h2 className="text-xl mb-3 font-bold leading-tight text-lighter text-shadow-md">
+          <h2 className="text-xl md:text-3xl mb-3 font-bold leading-tight text-lighter text-shadow-md">
             {title}
           </h2>
           {desc && (
-            <p className="text-sm mb-4 leading-relaxed text-gray-200 text-shadow-md">
+            <p className="text-sm md:text-lg mb-4 leading-relaxed text-gray-200 text-shadow-md">
               {desc}
             </p>
           )}
@@ -60,7 +60,7 @@ const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
             >
               <Link
                 href={`/${slug}`}
-                className="inline-block text-center px-4 py-2 bg-lighter/60 backdrop-blur-sm rounded-full hover:bg-lighter/90 transition-all duration-300 text-sm font-medium border border-lighter/30 hover:border-lighter/50"
+                className="inline-block text-center px-4 py-2 bg-lighter/60 backdrop-blur-sm rounded-full hover:bg-lighter/90 transition-all duration-300 text-sm md:text-lg font-medium border border-lighter/30 hover:border-lighter/50"
               >
                 {linkText}
               </Link>
@@ -174,7 +174,7 @@ const mobileFrameRanges: { key: number; startFrame: number; endFrame: number }[]
 ];
 
 const desktopFrameRanges: { key: number; startFrame: number; endFrame: number }[] = [
-  { key: 2, startFrame:110, endFrame: 150 },
+  { key: 2, startFrame: 110, endFrame: 150 },
   { key: 4, startFrame: 399, endFrame: 563 },
   { key: 6, startFrame: 740, endFrame: 885 },
   { key: 8, startFrame: 995, endFrame: 1100 },
@@ -202,15 +202,20 @@ const FactoryTour: React.FC = () => {
 
   // Device detection
   const updateDeviceType = useCallback(() => {
-    const mobile = window.innerWidth <= 768; // Adjust threshold as needed
-    setIsMobile(mobile);
+    if (typeof window !== "undefined") {
+      const mobile = window.innerWidth <= 768; // Adjust threshold as needed
+      setIsMobile(mobile);
+    }
   }, []);
 
   // Track viewport height changes
   const updateViewportHeight = useCallback(() => {
-    const vh = window.visualViewport?.height || window.innerHeight;
-    setViewportHeight(vh);
-    return vh;
+    if (typeof window !== "undefined") {
+      const vh = window.visualViewport?.height || window.innerHeight;
+      setViewportHeight(vh);
+      return vh;
+    }
+    return 0;
   }, []);
 
   // Debounced resize handler
@@ -225,6 +230,9 @@ const FactoryTour: React.FC = () => {
   }, [updateViewportHeight, updateDeviceType]);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === "undefined") return;
+
     updateViewportHeight();
     updateDeviceType();
 
@@ -251,6 +259,8 @@ const FactoryTour: React.FC = () => {
   }, [currentFrame, isMobile]);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     gsap.registerPlugin(ScrollTrigger);
 
     const canvas = canvasRef.current;
@@ -437,7 +447,7 @@ const FactoryTour: React.FC = () => {
       />
 
       <div className="fixed inset-0 pointer-events-none z-20">
-        <DigitalDisplayBoard isVisible={showDisplayBoard} currentFrame={currentFrame}/>
+        <DigitalDisplayBoard isVisible={showDisplayBoard} currentFrame={currentFrame} />
         {frameRanges.map(({ key, startFrame, endFrame }) => {
           const content = staticContent[key];
           const isVisible =

@@ -6,6 +6,12 @@ import { IoIosMail as Mail } from "react-icons/io";
 import toast from "react-hot-toast";
 import { CustomToast } from "../Reusable/CustomToast";
 import Link from "next/link";
+import {
+  FaFacebook as FaceBookIcon,
+  FaInstagram as InstaIcon,
+  FaLinkedin as LinkedinIcon,
+  FaYoutube as YoutubeIcon,
+} from "react-icons/fa";
 import { MailIcon } from "lucide-react";
 
 const containerVariants: Variants = {
@@ -27,6 +33,17 @@ const itemVariants: Variants = {
       type: "spring",
       stiffness: 100,
       damping: 15,
+    },
+  },
+};
+
+const hoverVariants: Variants = {
+  hover: {
+    scale: 1.05,
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 20,
     },
   },
 };
@@ -57,6 +74,29 @@ const ContactForm: React.FC = () => {
     { value: "anodizing", label: "Anodizing" },
     { value: "powder-coating", label: "Powder Coating" },
     { value: "others", label: "Others" },
+  ];
+
+  const socials = [
+    {
+      title: "Facebook",
+      link: "https://facebook.com/savitasynergy",
+      icon: FaceBookIcon,
+    },
+    {
+      title: "Instagram",
+      link: "https://instagram.com/savitasynergy",
+      icon: InstaIcon,
+    },
+    {
+      title: "Linkedin",
+      link: "https://www.linkedin.com/company/savitasynergy/",
+      icon: LinkedinIcon,
+    },
+    {
+      title: "Youtube",
+      link: "https://www.youtube.com/@savitasynergy",
+      icon: YoutubeIcon,
+    },
   ];
 
   const handleInputChange = (
@@ -440,34 +480,24 @@ const ContactForm: React.FC = () => {
             <p className="font-semibold text-gray-800 mb-2 text-center">
               Follow Us
             </p>
-            <div className="flex justify-center gap-6 text-gray-600">
-              <Link
-                href="https://www.facebook.com/savitasynergy"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Visit our Facebook page"
-                className="hover:text-primary transition-colors"
-              >
-                <FaFacebookF size={20} />
-              </Link>
-              <Link
-                href="https://www.instagram.com/savitasynergy"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Visit our Instagram page"
-                className="hover:text-primary transition-colors"
-              >
-                <FaInstagram size={20} />
-              </Link>
-              <Link
-                href="https://www.youtube.com/@savitasynergy"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Visit our YouTube channel"
-                className="hover:text-primary transition-colors"
-              >
-                <FaYoutube size={20} />
-              </Link>
+            <div className="flex gap-4 items-center justify-center">
+              {socials.map((social) => (
+                <motion.div
+                  key={social.title}
+                  variants={hoverVariants}
+                  whileHover="hover"
+                >
+                  <Link
+                    href={social.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Follow us on ${social.title}`}
+                    className="text-gray-600 transition-colors duration-200"
+                  >
+                    <social.icon size={24} />
+                  </Link>
+                </motion.div>
+              ))}
             </div>
           </div>
         </motion.div>
