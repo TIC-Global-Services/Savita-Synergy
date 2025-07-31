@@ -12,12 +12,12 @@ interface PriceItem {
 
 interface DigitalDisplayBoardProps {
   isVisible: boolean;
-  currentFrame: number; // Add currentFrame as a prop
-  isMobile: boolean;
+  currentFrame: number;
 }
 
-export const DigitalDisplayBoard: React.FC<DigitalDisplayBoardProps> = ({ isVisible, currentFrame, isMobile }) => {
+export const DigitalDisplayBoard: React.FC<DigitalDisplayBoardProps> = ({ isVisible, currentFrame }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 768);
 
   // Sample price data
   const priceData: PriceItem[] = [
@@ -40,6 +40,15 @@ export const DigitalDisplayBoard: React.FC<DigitalDisplayBoardProps> = ({ isVisi
     return () => clearInterval(timer);
   }, []);
 
+  // Update isMobile on resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('en-IN', {
       hour: '2-digit',
@@ -57,54 +66,69 @@ export const DigitalDisplayBoard: React.FC<DigitalDisplayBoardProps> = ({ isVisi
     });
   };
 
-  // Calculate top position based on currentFrame (from 50% at frame 20 to 0% at frame 45)
+  // Calculate top position based on currentFrame
   const calculateTopPosition = () => {
-    if (currentFrame < 20) return '48%';
-    if (currentFrame > 45) return '-20%';
-    const progress = (currentFrame - 20) / (45 + 20); // Normalize progress between 0 and 1
-    const topStart = 50; // Starting top position in percentage
-    const topEnd =  -20;   // Ending top position in percentage
-    const topValue = topStart + (topEnd - topStart) * progress; // Linear interpolation
+    const startFrame = isMobile ? 26 : 83; // Align with visibility range
+    const endFrame = isMobile ? 45 : 104; // Align with visibility range
+    if (currentFrame < startFrame) return '48%';
+    if (currentFrame > endFrame) return '-20%';
+    const progress = (currentFrame - startFrame) / (endFrame - startFrame);
+    const topStart = 48; // Starting top position in percentage
+    const topEnd = -20; // Ending top position in percentage
+    const topValue = topStart + (topEnd - topStart) * progress;
     return `${topValue}%`;
   };
 
-  // Calculate scale based on currentFrame (from 1 at frame 20 to 1.5 at frame 45)
+  // Calculate scale based on currentFrame
   const calculateScale = () => {
-    if (currentFrame < 20) return 1;
-    if (currentFrame > 45) return 1.8;
-    const progress = (currentFrame - 20) / (45 - 40); // Normalize progress between 0 and 1
-    const scaleStart = 1; // Starting scale
-    const scaleEnd = 1.8; // Ending scale
-    const scaleValue = scaleStart + (scaleEnd - scaleStart) * progress; // Linear interpolation
+    const startFrame = isMobile ? 26 : 83; // Align with visibility range
+    const endFrame = isMobile ? 45 : 104; // Align with visibility range
+    if (currentFrame < startFrame) return 1;
+    if (currentFrame > endFrame) return isMobile ? 4 : 3; // Increase mobile scaleEnd to 2
+    const progress = (currentFrame - startFrame) / (endFrame - startFrame);
+    const scaleStart = 1;
+    const scaleEnd = isMobile ? 4 : 3; // Increase mobile scale for better visibility
+    const scaleValue = scaleStart + (scaleEnd - scaleStart) * progress;
     return scaleValue;
   };
+
+  // Debug scaling values
+  useEffect(() => {
+    console.log({
+      currentFrame,
+      isMobile,
+      scale: calculateScale(),
+      top: calculateTopPosition(),
+    });
+  }, [currentFrame, isMobile]);
 
   return (
     <AnimatePresence mode="wait">
       {isVisible && (
         <motion.div
           initial={{ opacity: 0, scale: 1 }}
-          animate={{ opacity: 1, scale: calculateScale() }} // Apply dynamic scale
-          style={{ 
-            top: calculateTopPosition(), // Dynamically set top position
-            transformOrigin: 'center top', // Set transform origin to top for natural zoom
-          }} 
-          className="absolute left-1/2 transform -translate-x-1/2 -translate-y-[10%] lg:-translate-y-[15%] 2xl:-translate-y-[20%] w-[40%] bg-black text-green-400 font-mono overflow-hidden shadow-2xl border border-green-800 px-2 ml-[2px] md:ml-4"
+          animate={{ opacity: 1, scale: calculateScale() }}
+          style={{
+            top: calculateTopPosition(),
+            transformOrigin: 'center top',
+            width: isMobile ? '40vw' : '35vw', // Use viewport width for mobile
+          }}
+          className="absolute left-1/2 -translate-x-1/2 bg-black text-green-400 display overflow-hidden shadow-2xl border border-green-800 px-2 py-[5px] ml-[2px] md:ml-4"
         >
           {/* Header */}
-          <div className="text-green-400 md:py-3 flex justify-between items-center border-b border-green-800">
-            <div className="text-[10px] sm:text-xl font-bold tracking-wider">
+          <div className="text-green-400 md:py-2 flex justify-between items-center border-b border-green-800">
+            <div className="text-[8px] sm:text-xl font-bold tracking-wider">
               SAVITA SYNERGY PRICES
             </div>
             <div className="text-right">
-              <div className="text-[6px] sm:text-base font-bold">{formatTime(currentTime)}</div>
-              <div className="text-[6px] sm:text-base opacity-75">{formatDate(currentTime)}</div>
+              <div className="text-[6px] sm:text-base opacity-75">
+                <span className="font-bold">{formatTime(currentTime)}</span> - {formatDate(currentTime)}
+              </div>
             </div>
           </div>
 
           {/* Main Display Area */}
           <div className="h-[3dvh] md:h-[9dvh] bg-black relative overflow-hidden">
-            {/* Scrolling Price Text */}
             <motion.div
               className="absolute whitespace-nowrap flex items-center h-full text-xl sm:text-3xl font-bold"
               animate={{ x: '-100%' }}
@@ -115,18 +139,18 @@ export const DigitalDisplayBoard: React.FC<DigitalDisplayBoardProps> = ({ isVisi
               }}
             >
               {priceData.map((item, index) => (
-                <div key={index} className="flex items-center ">
-                  <span className="text-green-400 text-base sm:text-xl tracking-wide">{item.product}:</span>
-                  <span className="text-yellow-400 mx-2 sm:mx-4 font-bold text-xl sm:text-2xl">{item.price}</span>
-                  <span className="text-green-400 text-base sm:text-xl">{item.unit}</span>
+                <div key={index} className="flex items-center">
+                  <span className="text-green-400 text-base sm:text-4xl tracking-wide">{item.product}:</span>
+                  <span className="text-yellow-400 mx-2 sm:mx-4 font-bold text-xl sm:text-4xl">{item.price}</span>
+                  <span className="text-green-400 text-base sm:text-4xl">{item.unit}</span>
                   {item.change && (
                     <span
                       className={`ml-2 sm:ml-4 px-2 sm:px-3 py-1 sm:py-1.5 rounded text-sm sm:text-base font-bold ${
                         item.changeType === 'up'
                           ? 'text-green-300'
                           : item.changeType === 'down'
-                          ? 'text-red-400'
-                          : 'text-gray-400'
+                            ? 'text-red-400'
+                            : 'text-gray-400'
                       }`}
                     >
                       {item.change}
@@ -136,8 +160,6 @@ export const DigitalDisplayBoard: React.FC<DigitalDisplayBoardProps> = ({ isVisi
                 </div>
               ))}
             </motion.div>
-
-            
           </div>
 
           {/* Scanline Effect */}

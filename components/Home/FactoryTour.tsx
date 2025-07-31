@@ -247,7 +247,7 @@ const FactoryTour: React.FC = () => {
   }, [handleResize]);
 
   useEffect(() => {
-    setShowDisplayBoard(currentFrame >= 0 && currentFrame <= (isMobile ? 45 : 53));
+    setShowDisplayBoard(currentFrame >= 0 && currentFrame <= (isMobile ? 45 : 104));
   }, [currentFrame, isMobile]);
 
   useEffect(() => {
@@ -437,7 +437,7 @@ const FactoryTour: React.FC = () => {
       />
 
       <div className="fixed inset-0 pointer-events-none z-20">
-        <DigitalDisplayBoard isVisible={showDisplayBoard} currentFrame={currentFrame} isMobile={isMobile} />
+        <DigitalDisplayBoard isVisible={showDisplayBoard} currentFrame={currentFrame}/>
         {frameRanges.map(({ key, startFrame, endFrame }) => {
           const content = staticContent[key];
           const isVisible =
