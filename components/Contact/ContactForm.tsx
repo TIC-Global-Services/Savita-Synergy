@@ -1,13 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { motion, Variants } from "framer-motion";
-import { FaPhone as Phone } from "react-icons/fa6";
+import { FaPhone as Phone, FaMapLocationDot as Address, FaChevronDown as ChevronDown, FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa6";
 import { IoIosMail as Mail } from "react-icons/io";
-import { FaMapLocationDot as Address } from "react-icons/fa6";
-import { FaChevronDown as ChevronDown } from "react-icons/fa6";
 import toast from "react-hot-toast";
 import { CustomToast } from "../Reusable/CustomToast";
 import Link from "next/link";
+import { MailIcon } from "lucide-react";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -47,9 +46,7 @@ const ContactForm: React.FC = () => {
     product: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<
-    "idle" | "success" | "error"
-  >("idle");
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
 
   const productOptions = [
     { value: "", label: "Select a product" },
@@ -63,9 +60,7 @@ const ContactForm: React.FC = () => {
   ];
 
   const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -128,51 +123,28 @@ const ContactForm: React.FC = () => {
 
     try {
       const timestamp = getCurrentTimestamp();
-      const submissionData = {
-        ...formData,
-        timestamp: timestamp,
-      };
+      const submissionData = { ...formData, timestamp };
 
-      // Replace with your Google Apps Script Web App URL
       const GOOGLE_SCRIPT_URL =
         "https://script.google.com/macros/s/AKfycbzvy7oEqt2sSfa_8JQujrEqHMqaDjGXEUndqzywCbMTgCxB4dMypfoCEu6UydjECQSL/exec";
 
-      const response = await fetch(GOOGLE_SCRIPT_URL, {
+      await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(submissionData),
       });
 
-      // console.log('Contact form submitted:', submissionData);
       setSubmitStatus("success");
       toast.custom(
-        (t) => (
-          <CustomToast
-            message="Message sent successfully!"
-            t={t}
-            type="success"
-          />
-        ),
-        {
-          duration: 3000,
-        }
+        (t) => <CustomToast message="Message sent successfully!" t={t} type="success" />,
+        { duration: 3000 }
       );
       setFormData({ name: "", email: "", phone: "", product: "", message: "" });
     } catch (error) {
       toast.custom(
-        (t) => (
-          <CustomToast
-            message="Failed to send message. Try again."
-            t={t}
-            type="error"
-          />
-        ),
-        {
-          duration: 3000,
-        }
+        (t) => <CustomToast message="Failed to send message. Try again." t={t} type="error" />,
+        { duration: 3000 }
       );
       setSubmitStatus("error");
     } finally {
@@ -181,39 +153,40 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-20 bg-gray-50">
-      <motion.div variants={itemVariants} className="text-center mb-10">
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight">
-          Let&apos;s Connect
+    <section className="py-12 px-4 sm:px-6 lg:px-8 ">
+      <motion.div variants={itemVariants} className="text-center mb-12 max-w-4xl mx-auto">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          Looking for Custom Aluminium Solutions?
         </h1>
-        <p className="text-gray-600 text-lg sm:text-xl max-w-3xl mx-auto">
-          Have a question, need a quote, or want to learn more about our
-          aluminum products and services? We&apos;re here to help.
+        <p className="text-gray-600 text-base sm:text-lg max-w-3xl mx-auto">
+          We manufacture and supply high-grade aluminium products customized to your needs.
         </p>
       </motion.div>
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        className=" bg-[#F4F5F7] max-w-3xl mx-auto rounded-xl border border-gray-200 pt-10 md:py-10 px-8 md:px-10"
-      >
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
         {/* Contact Form */}
-        <motion.div variants={itemVariants} className="">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="bg-[#F6F7F7] rounded-lg p-6 sm:p-8"
+        >
           <motion.form
             variants={containerVariants}
             onSubmit={handleSubmit}
-            className="space-y-8"
+            className="space-y-6"
             role="form"
             aria-label="Contact form"
+            aria-busy={isSubmitting}
           >
             {/* Name */}
             <motion.div variants={itemVariants}>
               <label
                 htmlFor="name"
-                className="block text-sm sm:text-base font-medium text-gray-900 mb-2"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Full Name <span className="text-red-500">*</span>
+                Full Name <span className="text-red-500" aria-hidden="true">*</span>
               </label>
               <input
                 id="name"
@@ -223,12 +196,14 @@ const ContactForm: React.FC = () => {
                 value={formData.name}
                 onChange={handleInputChange}
                 placeholder="Enter your full name"
-                className="w-full px-5 py-3 rounded-full border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lighter transition-all"
                 aria-describedby={errors.name ? "name-error" : undefined}
+                aria-required="true"
+                aria-invalid={!!errors.name}
                 disabled={isSubmitting}
               />
               {errors.name && (
-                <p id="name-error" className="text-red-500 text-sm mt-2">
+                <p id="name-error" className="text-red-500 text-sm mt-1">
                   {errors.name}
                 </p>
               )}
@@ -238,9 +213,9 @@ const ContactForm: React.FC = () => {
             <motion.div variants={itemVariants}>
               <label
                 htmlFor="email"
-                className="block text-sm sm:text-base font-medium text-gray-900 mb-2"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Email <span className="text-red-500">*</span>
+                Email <span className="text-red-500" aria-hidden="true">*</span>
               </label>
               <input
                 id="email"
@@ -250,12 +225,14 @@ const ContactForm: React.FC = () => {
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="Enter your email"
-                className="w-full px-5 py-3 rounded-full border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lighter transition-all"
                 aria-describedby={errors.email ? "email-error" : undefined}
+                aria-required="true"
+                aria-invalid={!!errors.email}
                 disabled={isSubmitting}
               />
               {errors.email && (
-                <p id="email-error" className="text-red-500 text-sm mt-2">
+                <p id="email-error" className="text-red-500 text-sm mt-1">
                   {errors.email}
                 </p>
               )}
@@ -265,9 +242,9 @@ const ContactForm: React.FC = () => {
             <motion.div variants={itemVariants}>
               <label
                 htmlFor="phone"
-                className="block text-sm sm:text-base font-medium text-gray-900 mb-2"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Phone Number <span className="text-red-500">*</span>
+                Phone Number <span className="text-red-500" aria-hidden="true">*</span>
               </label>
               <input
                 id="phone"
@@ -277,12 +254,14 @@ const ContactForm: React.FC = () => {
                 value={formData.phone}
                 onChange={handleInputChange}
                 placeholder="Enter your phone number"
-                className="w-full px-5 py-3 rounded-full border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lighter transition-all"
                 aria-describedby={errors.phone ? "phone-error" : undefined}
+                aria-required="true"
+                aria-invalid={!!errors.phone}
                 disabled={isSubmitting}
               />
               {errors.phone && (
-                <p id="phone-error" className="text-red-500 text-sm mt-2">
+                <p id="phone-error" className="text-red-500 text-sm mt-1">
                   {errors.phone}
                 </p>
               )}
@@ -292,9 +271,9 @@ const ContactForm: React.FC = () => {
             <motion.div variants={itemVariants}>
               <label
                 htmlFor="product"
-                className="block text-sm sm:text-base font-medium text-gray-900 mb-2"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Product/Service Interest <span className="text-red-500">*</span>
+                Product/Service Interest <span className="text-red-500" aria-hidden="true">*</span>
               </label>
               <div className="relative">
                 <select
@@ -303,10 +282,10 @@ const ContactForm: React.FC = () => {
                   required
                   value={formData.product}
                   onChange={handleInputChange}
-                  className="w-full px-5 py-3 rounded-full border border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200 appearance-none cursor-pointer "
-                  aria-describedby={
-                    errors.product ? "product-error" : undefined
-                  }
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-lighter transition-all appearance-none cursor-pointer bg-white"
+                  aria-describedby={errors.product ? "product-error" : undefined}
+                  aria-required="true"
+                  aria-invalid={!!errors.product}
                   disabled={isSubmitting}
                 >
                   {productOptions.map((option) => (
@@ -316,12 +295,12 @@ const ContactForm: React.FC = () => {
                   ))}
                 </select>
                 <ChevronDown
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
                   size={16}
                 />
               </div>
               {errors.product && (
-                <p id="product-error" className="text-red-500 text-sm mt-2">
+                <p id="product-error" className="text-red-500 text-sm mt-1">
                   {errors.product}
                 </p>
               )}
@@ -331,9 +310,9 @@ const ContactForm: React.FC = () => {
             <motion.div variants={itemVariants}>
               <label
                 htmlFor="message"
-                className="block text-sm sm:text-base font-medium text-gray-900 mb-2"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Message <span className="text-red-500">*</span>
+                Message <span className="text-red-500" aria-hidden="true">*</span>
               </label>
               <textarea
                 id="message"
@@ -342,8 +321,9 @@ const ContactForm: React.FC = () => {
                 onChange={handleInputChange}
                 required
                 placeholder="Enter your message"
-                className="w-full px-5 py-3 rounded-xl border border-gray-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lighter transition-all"
                 rows={5}
+                aria-required="true"
                 disabled={isSubmitting}
               />
             </motion.div>
@@ -353,7 +333,8 @@ const ContactForm: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-8 py-3 bg-lighter text-white font-semibold rounded-full hover:bg-primary transition-all duration-200 cursor-pointer shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                className="px-6 py-2 bg-lighter text-white font-semibold rounded-lg hover:bg-primary transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-lighter disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                aria-label={isSubmitting ? "Sending message" : "Send message"}
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
               </button>
@@ -363,7 +344,7 @@ const ContactForm: React.FC = () => {
             {submitStatus === "success" && (
               <motion.p
                 variants={itemVariants}
-                className="text-green-600 text-sm sm:text-base text-center mt-4"
+                className="text-green-600 text-sm text-center"
               >
                 Message sent successfully! We&apos;ll get back to you soon.
               </motion.p>
@@ -371,54 +352,127 @@ const ContactForm: React.FC = () => {
             {submitStatus === "error" && (
               <motion.p
                 variants={itemVariants}
-                className="text-red-500 text-sm sm:text-base text-center mt-4"
+                className="text-red-500 text-sm text-center"
               >
                 Failed to send message. Please try again.
               </motion.p>
             )}
           </motion.form>
         </motion.div>
-      </motion.div>
-      {/* Contact Details Section */}
-      <motion.div variants={itemVariants}>
-        <div className="space-y-6 flex flex-col md:flex-row text-center md:text-start items-center w-full justify-center md:justify-between max-w-5xl mx-auto my-10">
-          <div className=" text-gray-600 flex gap-2 items-center justify-center">
-            <Phone size={22} />
-            <div>
-              <Link
-                href={"tel:+91 9875550437"}
-                className="text-gray-600 text-lg leading-relaxed flex items-start justify-start gap-4"
+
+        {/* Contact Details Section */}
+        <motion.div
+          variants={itemVariants}
+          className="space-y-8 py-6 flex flex-col justify-between  p-6 sm:p-8"
+        >
+          {/* Heading */}
+          <div className="text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+              Why Choose Savita Synergy?
+            </h2>
+            <p className="text-gray-600 text-sm sm:text-base">
+              Trusted by clients across India for quality, reliability, and service.
+            </p>
+          </div>
+
+          {/* Highlights */}
+          <div className="grid sm:grid-cols-3 gap-4 text-center">
+            {[
+              "Fast quotes. Fair pricing. Reliable delivery",
+              "10+ years of aluminium expertise",
+              "Serving 15+ industries across India",
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="bg-[#F6F7F7] rounded-md px-4 py-6 font-medium text-gray-700 "
               >
-                {" "}
-                +91 9875550437
+                {item}
+              </div>
+            ))}
+          </div>
+
+          {/* Contact Details */}
+          <div className="space-y-6 ">
+            {/* Phone */}
+            <div className="flex items-start gap-3">
+              <Phone size={20} className="mt-1 text-primary" />
+              <div>
+                <p className="font-semibold text-gray-800">Call Us</p>
+                <Link href="tel:+919875550437" className="block hover:text-primary text-sm">
+                  +91 9875550437
+                </Link>
+                <Link href="tel:+919330838236" className="block hover:text-primary text-sm">
+                  +91 9330838236
+                </Link>
+              </div>
+            </div>
+
+            {/* Email */}
+            <div className="flex items-start gap-3">
+              <MailIcon size={20} className="mt-1 text-primary" />
+              <div>
+                <p className="font-semibold text-gray-800">Email</p>
+                <Link
+                  href="mailto:contact@savitasynergy.com"
+                  className="block hover:text-primary text-sm break-all"
+                >
+                  contact@savitasynergy.com
+                </Link>
+              </div>
+            </div>
+
+            {/* Address */}
+            <div className="flex items-start gap-3">
+              <Address size={20} className="mt-1 text-primary" />
+              <div>
+                <p className="font-semibold text-gray-800">Address</p>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Plot No. 96, Sector 1A, Khopar Khairane,<br />
+                  Navi Mumbai - 400709,<br />
+                  Maharashtra, India
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="border-t pt-4">
+            <p className="font-semibold text-gray-800 mb-2 text-center">
+              Follow Us
+            </p>
+            <div className="flex justify-center gap-6 text-gray-600">
+              <Link
+                href="https://www.facebook.com/savitasynergy"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit our Facebook page"
+                className="hover:text-primary transition-colors"
+              >
+                <FaFacebookF size={20} />
               </Link>
               <Link
-                href={"tel:+91 9330838236"}
-                className="text-gray-600 text-lg leading-relaxed flex items-start justify-start gap-4"
+                href="https://www.instagram.com/savitasynergy"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit our Instagram page"
+                className="hover:text-primary transition-colors"
               >
-                {" "}
-                +91 9330838236
+                <FaInstagram size={20} />
+              </Link>
+              <Link
+                href="https://www.youtube.com/@savitasynergy"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit our YouTube channel"
+                className="hover:text-primary transition-colors"
+              >
+                <FaYoutube size={20} />
               </Link>
             </div>
           </div>
-          <div>
-            <Link
-              href={"mailto:contact@savitasynergy.com"}
-              className="text-gray-600 text-lg leading-relaxed flex items-center justify-center gap-4"
-            >
-              <Mail size={22} /> contact@savitasynergy.com
-            </Link>
-          </div>
-          <div>
-            <p className="text-gray-600 text-lg leading-relaxed flex items-center justify-center gap-4">
-              <Address size={22} />
-              Plot No. 96, Sector 1A, Khopar Khairane, <br />
-              Navi Mumbai-400709, <br />
-              Maharashtra, India
-            </p>
-          </div>
-        </div>
-      </motion.div>
+        </motion.div>
+
+      </div>
     </section>
   );
 };
