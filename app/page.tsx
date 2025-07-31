@@ -1,15 +1,10 @@
+// app/page.tsx
+import dynamic from "next/dynamic";
 
-import FactoryTour from '@/components/Home/FactoryTour'
-import React from 'react'
+const FactoryTour = dynamic(() => import("../components/Home/FactoryTour"), {
+  ssr: false, // Disable server-side rendering
+});
 
-const page = () => {
-
-  
-  return (
-    <div>
-      <FactoryTour />
-    </div>
-  )
+export default function Home() {
+  return <FactoryTour />;
 }
-
-export default page
