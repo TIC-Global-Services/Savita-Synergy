@@ -282,7 +282,6 @@ const FactoryTour: React.FC = () => {
         // Optimize for Core Web Vitals
         img.decoding = "async"; // Improve FID
         img.loading = "eager"; // Critical images load immediately
-        img.crossOrigin = "anonymous";
         img.fetchPriority = priorityFrames.current.has(i) ? "high" : "low";
 
         // Reduce network visibility
@@ -290,9 +289,6 @@ const FactoryTour: React.FC = () => {
         img.referrerPolicy = 'no-referrer';
         img.crossOrigin = "anonymous";
 
-        // Reduce network tab visibility
-        img.style.display = 'none';
-        img.referrerPolicy = 'no-referrer';
 
         img.onload = () => {
           imageCache.current.set(i, img);
