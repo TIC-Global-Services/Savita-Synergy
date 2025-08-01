@@ -93,14 +93,14 @@ export const DigitalDisplayBoard: React.FC<DigitalDisplayBoardProps> = ({ isVisi
   };
 
   // Debug scaling values
-  useEffect(() => {
-    console.log({
-      currentFrame,
-      isMobile,
-      scale: calculateScale(),
-      top: calculateTopPosition(),
-    });
-  }, [currentFrame, isMobile]);
+  // useEffect(() => {
+  //   console.log({
+  //     currentFrame,
+  //     isMobile,
+  //     scale: calculateScale(),
+  //     top: calculateTopPosition(),
+  //   });
+  // }, [currentFrame, isMobile]);
 
   return (
     <AnimatePresence mode="wait">

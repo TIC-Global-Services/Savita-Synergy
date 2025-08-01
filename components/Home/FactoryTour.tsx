@@ -21,6 +21,18 @@ interface StaticContentMap {
   [key: number]: StaticContentProps;
 }
 
+// Image cache management
+interface ImageCache {
+  [key: number]: HTMLImageElement;
+}
+
+interface BatchConfig {
+  initialBatchSize: number;
+  subsequentBatchSize: number;
+  preloadDistance: number; // How many frames ahead to preload
+  cacheSize: number; // Maximum number of images to keep in memory
+}
+
 const StaticContent: React.FC<StaticContentProps & { isVisible: boolean }> = ({
   title,
   desc,
@@ -200,10 +212,24 @@ const FactoryTour: React.FC = () => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Batch loading state
+  const imageCache = useRef<ImageCache>({});
+  const loadingQueue = useRef<Set<number>>(new Set());
+  const [initialBatchLoaded, setInitialBatchLoaded] = useState(false);
+  const [batchLoadingStatus, setBatchLoadingStatus] = useState<string>("Initializing...");
+
+  // Batch configuration
+  const batchConfig: BatchConfig = {
+    initialBatchSize: 1000, 
+    subsequentBatchSize: 1000, 
+    preloadDistance: 1000, 
+    cacheSize: 4000, 
+  };
+
   // Device detection
   const updateDeviceType = useCallback(() => {
     if (typeof window !== "undefined") {
-      const mobile = window.innerWidth <= 768; // Adjust threshold as needed
+      const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
     }
   }, []);
@@ -228,6 +254,163 @@ const FactoryTour: React.FC = () => {
       updateDeviceType();
     }, 100);
   }, [updateViewportHeight, updateDeviceType]);
+
+  // Image URL generator
+  const getImageUrl = useCallback((index: number) => {
+    return `${isMobile ? "/mobile-sequence" : "/desktop-sequence"}/compressed/pillow/${(index + 1)
+      .toString()
+      .padStart(4, "0")}.webp`;
+  }, [isMobile]);
+
+  // Cache management
+  const cleanupCache = useCallback(() => {
+    const cacheKeys = Object.keys(imageCache.current).map(Number);
+    if (cacheKeys.length > batchConfig.cacheSize) {
+      // Sort by distance from current frame
+      cacheKeys.sort((a, b) => {
+        const distA = Math.abs(a - currentFrame);
+        const distB = Math.abs(b - currentFrame);
+        return distB - distA; // Sort descending (furthest first)
+      });
+
+      // Remove furthest images
+      const toRemove = cacheKeys.slice(batchConfig.cacheSize);
+      toRemove.forEach(key => {
+        delete imageCache.current[key];
+      });
+
+      console.log(`Cleaned up ${toRemove.length} images from cache`);
+    }
+  }, [currentFrame, batchConfig.cacheSize]);
+
+  // Load a single image
+  const loadImage = useCallback((index: number): Promise<HTMLImageElement> => {
+    return new Promise((resolve, reject) => {
+      // Check if already in cache
+      if (imageCache.current[index]) {
+        resolve(imageCache.current[index]);
+        return;
+      }
+
+      // Check if already loading
+      if (loadingQueue.current.has(index)) {
+        // Wait for it to finish loading
+        const checkCache = () => {
+          if (imageCache.current[index]) {
+            resolve(imageCache.current[index]);
+          } else {
+            setTimeout(checkCache, 50);
+          }
+        };
+        checkCache();
+        return;
+      }
+
+      loadingQueue.current.add(index);
+      
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      
+      img.onload = () => {
+        imageCache.current[index] = img;
+        loadingQueue.current.delete(index);
+        resolve(img);
+      };
+      
+      img.onerror = () => {
+        console.error(`Failed to load image: ${getImageUrl(index)}`);
+        loadingQueue.current.delete(index);
+        reject(new Error(`Failed to load image ${index}`));
+      };
+      
+      img.src = getImageUrl(index);
+    });
+  }, [getImageUrl]);
+
+  // Load a batch of images
+  const loadBatch = useCallback(async (startIndex: number, batchSize: number, description: string) => {
+    setBatchLoadingStatus(description);
+    const frameCount = isMobile ? 3269 : 3706;
+    const endIndex = Math.min(startIndex + batchSize, frameCount);
+    const promises: Promise<HTMLImageElement>[] = [];
+
+    for (let i = startIndex; i < endIndex; i++) {
+      promises.push(loadImage(i));
+    }
+
+    try {
+      await Promise.all(promises);
+      console.log(`Loaded batch: ${startIndex}-${endIndex-1}`);
+    } catch (error) {
+      console.error(`Error loading batch ${startIndex}-${endIndex-1}:`, error);
+    }
+  }, [isMobile, loadImage]);
+
+  // Preload images around current frame
+  const preloadAroundFrame = useCallback(async (frameIndex: number) => {
+    const frameCount = isMobile ? 3269 : 3706;
+    const { preloadDistance, subsequentBatchSize } = batchConfig;
+    
+    const startFrame = Math.max(0, frameIndex - preloadDistance);
+    const endFrame = Math.min(frameCount - 1, frameIndex + preloadDistance * 2);
+    
+    // Load in smaller chunks to avoid blocking
+    for (let i = startFrame; i < endFrame; i += subsequentBatchSize) {
+      const batchEnd = Math.min(i + subsequentBatchSize, endFrame);
+      await loadBatch(i, batchEnd - i, `Preloading frames ${i}-${batchEnd-1}`);
+      
+      // Clean up cache periodically
+      if (i % (subsequentBatchSize * 2) === 0) {
+        cleanupCache();
+      }
+    }
+  }, [isMobile, batchConfig, loadBatch, cleanupCache]);
+
+  // Initialize with first batch
+  useEffect(() => {
+    const initializeImages = async () => {
+      if (typeof window === "undefined") return;
+
+      try {
+        // Load initial batch
+        await loadBatch(0, batchConfig.initialBatchSize, "Loading initial frames...");
+        setInitialBatchLoaded(true);
+        setImagesLoaded(true);
+        setIsLoading(false);
+        setBatchLoadingStatus("Ready");
+
+        // Start preloading more frames in background
+        setTimeout(() => {
+          preloadAroundFrame(0);
+        }, 1000);
+
+      } catch (error) {
+        console.error("Error loading initial batch:", error);
+        setIsLoading(false);
+      }
+    };
+
+    initializeImages();
+  }, [batchConfig.initialBatchSize, loadBatch, preloadAroundFrame]);
+
+  // Preload frames as user scrolls
+  useEffect(() => {
+    if (!initialBatchLoaded) return;
+
+    const preloadTimeout = setTimeout(() => {
+      preloadAroundFrame(currentFrame);
+    }, 500); // Debounce preloading
+
+    return () => clearTimeout(preloadTimeout);
+  }, [currentFrame, initialBatchLoaded, preloadAroundFrame]);
+
+  // Update load percentage based on cached images
+  useEffect(() => {
+    const frameCount = isMobile ? 3269 : 3706;
+    const cachedCount = Object.keys(imageCache.current).length;
+    const percentage = Math.min((cachedCount / batchConfig.initialBatchSize) * 100, 100);
+    setLoadPercentage(percentage);
+  }, [isMobile, batchConfig.initialBatchSize]);
 
   useEffect(() => {
     // Only run on client side
@@ -290,37 +473,8 @@ const FactoryTour: React.FC = () => {
     setCanvasSize();
 
     const frameCount = isMobile ? 3269 : 3706;
-    const currentFrameFn = (index: number) =>
-      `${isMobile ? "/mobile-sequence" : "/desktop-sequence"}/compressed/pillow/${(index + 1)
-        .toString()
-        .padStart(4, "0")}.webp`;
-
-    const images: HTMLImageElement[] = [];
     const tour = { frame: 0 };
-    let loadedCount = 0;
     let lastFrame = -1;
-
-    const checkAllLoaded = () => {
-      loadedCount++;
-      setLoadPercentage((loadedCount / frameCount) * 100);
-      if (loadedCount === frameCount) {
-        setImagesLoaded(true);
-        drawFrame(0);
-        setIsLoading(false);
-      }
-    };
-
-    for (let i = 0; i < frameCount; i++) {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = checkAllLoaded;
-      img.onerror = () => {
-        console.error(`Failed to load image: ${currentFrameFn(i)}`);
-        checkAllLoaded();
-      };
-      img.src = currentFrameFn(i);
-      images.push(img);
-    }
 
     const drawFrame = (frameIndex: number) => {
       const index = Math.min(
@@ -331,7 +485,7 @@ const FactoryTour: React.FC = () => {
       lastFrame = index;
       setCurrentFrame(index);
 
-      const img = images[index];
+      const img = imageCache.current[index];
       if (img && img.complete) {
         const canvasWidth = window.innerWidth;
         const canvasHeight = viewportHeight || window.innerHeight;
@@ -368,6 +522,9 @@ const FactoryTour: React.FC = () => {
           canvasWidth,
           canvasHeight
         );
+      } else {
+        // Image not loaded yet, show loading indicator or previous frame
+        console.log(`Frame ${index} not loaded yet`);
       }
     };
 
@@ -381,7 +538,7 @@ const FactoryTour: React.FC = () => {
         trigger: containerRef.current,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.5,
+        scrub: 0.2,
         onUpdate: (self) => {
           const progress = self.progress;
           const targetFrame = progress * (frameCount - 1);
@@ -397,6 +554,7 @@ const FactoryTour: React.FC = () => {
     };
 
     if (imagesLoaded) {
+      drawFrame(0); // Draw first frame
       setupAnimation();
     }
 
@@ -432,7 +590,10 @@ const FactoryTour: React.FC = () => {
       className="h-[10000px] bg-black flex justify-center relative overflow-hidden"
     >
       {isLoading && (
-        <FullPageLoader percentage={loadPercentage} isVisible={isLoading} />
+        <FullPageLoader 
+          percentage={loadPercentage} 
+          isVisible={isLoading}
+        />
       )}
 
       <canvas
@@ -466,6 +627,16 @@ const FactoryTour: React.FC = () => {
           );
         })}
       </div>
+
+      {/* Debug info - remove in production */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="fixed top-4 right-4 bg-black/80 text-white p-2 text-xs z-50 rounded">
+          <div>Frame: {currentFrame}</div>
+          <div>Cached: {Object.keys(imageCache.current).length}</div>
+          <div>Loading: {loadingQueue.current.size}</div>
+          <div>Status: {batchLoadingStatus}</div>
+        </div>
+      )}
     </div>
   );
 };
