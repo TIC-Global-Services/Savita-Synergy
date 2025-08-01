@@ -203,7 +203,7 @@ const FactoryTour: React.FC = () => {
   // Device detection
   const updateDeviceType = useCallback(() => {
     if (typeof window !== "undefined") {
-      const mobile = window.innerWidth <= 768; // Adjust threshold as needed
+      const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
     }
   }, []);
@@ -230,7 +230,6 @@ const FactoryTour: React.FC = () => {
   }, [updateViewportHeight, updateDeviceType]);
 
   useEffect(() => {
-    // Only run on client side
     if (typeof window === "undefined") return;
 
     updateViewportHeight();
@@ -290,10 +289,71 @@ const FactoryTour: React.FC = () => {
     setCanvasSize();
 
     const frameCount = isMobile ? 3269 : 3706;
-    const currentFrameFn = (index: number) =>
-      `${isMobile ? "/mobile-sequence" : "/desktop-sequence"}/compressed/pillow/${(index + 1)
-        .toString()
-        .padStart(4, "0")}.webp`;
+
+    // OPTION 1: Use link preloading (recommended)
+    const preloadImages = () => {
+      const device = isMobile ? "mobile" : "desktop";
+      const baseVersion = isMobile ? "v175405" : "v175405";
+      const version = `${baseVersion}${isMobile ? 1256 : 4916}`;
+      
+      for (let i = 0; i < frameCount; i++) {
+        const frameNumber = (i + 1).toString().padStart(4, "0");
+        const imageUrl = `https://res.cloudinary.com/dxks5qn1d/image/upload/${version}/savita-assets/3d-sequence/${device}/${frameNumber}.webp`;
+        
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = imageUrl;
+        link.crossOrigin = 'anonymous';
+        document.head.appendChild(link);
+      }
+    };
+
+    // OPTION 2: Use fetch with blob conversion (alternative approach)
+    const loadImagesWithFetch = async () => {
+      const device = isMobile ? "mobile" : "desktop";
+      const baseVersion = isMobile ? "v175405" : "v175405";
+      const version = `${baseVersion}${isMobile ? 1256 : 4916}`;
+      
+      const imagePromises = [];
+      
+      for (let i = 0; i < frameCount; i++) {
+        const frameNumber = (i + 1).toString().padStart(4, "0");
+        const imageUrl = `https://res.cloudinary.com/dxks5qn1d/image/upload/${version}/savita-assets/3d-sequence/${device}/${frameNumber}.webp`;
+        
+        const promise = fetch(imageUrl, {
+          mode: 'cors',
+          cache: 'force-cache' // This helps with browser caching
+        })
+        .then(response => response.blob())
+        .then(blob => {
+          const img = new Image();
+          const objectUrl = URL.createObjectURL(blob);
+          
+          return new Promise<HTMLImageElement>((resolve, reject) => {
+            img.onload = () => {
+              URL.revokeObjectURL(objectUrl); // Clean up
+              resolve(img);
+            };
+            img.onerror = reject;
+            img.src = objectUrl;
+          });
+        });
+        
+        imagePromises.push(promise);
+      }
+      
+      return Promise.all(imagePromises);
+    };
+
+    // OPTION 3: Standard image loading (your current approach)
+    const currentFrameFn = (index: number) => {
+      const device = isMobile ? "mobile" : "desktop";
+      const baseVersion = isMobile ? "v175405" : "v175405";
+      const frameNumber = (index + 1).toString().padStart(4, "0");
+      const version = `${baseVersion}${isMobile ? 1256 : 4916}`;
+      return `https://res.cloudinary.com/dxks5qn1d/image/upload/${version}/savita-assets/3d-sequence/${device}/${frameNumber}.webp`;
+    };
 
     const images: HTMLImageElement[] = [];
     const tour = { frame: 0 };
@@ -310,9 +370,20 @@ const FactoryTour: React.FC = () => {
       }
     };
 
+    // Choose your loading method:
+    
+    // Method 1: Preload links (won't show in network tab as prominently)
+    // preloadImages();
+
+    // Method 2: Standard loading (your current method)
     for (let i = 0; i < frameCount; i++) {
       const img = new Image();
       img.crossOrigin = "anonymous";
+      
+      // Add these properties to potentially reduce network tab visibility
+      img.style.display = 'none';
+      img.loading = 'eager';
+      
       img.onload = checkAllLoaded;
       img.onerror = () => {
         console.error(`Failed to load image: ${currentFrameFn(i)}`);
