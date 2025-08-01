@@ -49,7 +49,7 @@ const Navbar: React.FC = () => {
       <div className="flex items-center justify-between px-6 py-4">
         {/* Logo */}
         <Link href="/" className="text-xl font-bold text-gray-900">
-          <Image src="/logo.png" alt="Logo" width={100} height={100} />
+          <Image src="/logo.png" alt="Logo" width={100} height={100} quality={90} />
         </Link>
 
         {/* Desktop + Tablet Nav */}

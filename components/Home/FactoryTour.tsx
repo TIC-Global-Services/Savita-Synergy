@@ -201,6 +201,7 @@ const FactoryTour: React.FC = () => {
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const imageCache = useRef<Map<number, HTMLImageElement>>(new Map());
   const loadingQueue = useRef<Set<number>>(new Set());
+  const priorityFrames = useRef<Set<number>>(new Set());
 
   // Device detection
   const updateDeviceType = useCallback(() => {
@@ -264,47 +265,57 @@ const FactoryTour: React.FC = () => {
     const device = isMobile ? "mobile" : "desktop";
     const baseVersion = isMobile ? "v175405" : "v175405";
     const version = `${baseVersion}${isMobile ? 1256 : 4916}`;
-    
+
     const promises = [];
     const endIndex = Math.min(startIndex + batchSize, frameCount);
-    
+
     for (let i = startIndex; i < endIndex; i++) {
       if (imageCache.current.has(i) || loadingQueue.current.has(i)) continue;
-      
+
       loadingQueue.current.add(i);
       const frameNumber = (i + 1).toString().padStart(4, "0");
       const imageUrl = `https://res.cloudinary.com/dxks5qn1d/image/upload/${version}/savita-assets/3d-sequence/${device}/${frameNumber}.webp`;
-      
+
       const promise = new Promise<void>((resolve) => {
         const img = new Image();
+
+        // Optimize for Core Web Vitals
+        img.decoding = "async"; // Improve FID
+        img.loading = "eager"; // Critical images load immediately
         img.crossOrigin = "anonymous";
-        
+        img.fetchPriority = priorityFrames.current.has(i) ? "high" : "low";
+
+        // Reduce network visibility
+        img.style.display = 'none';
+        img.referrerPolicy = 'no-referrer';
+        img.crossOrigin = "anonymous";
+
         // Reduce network tab visibility
         img.style.display = 'none';
         img.referrerPolicy = 'no-referrer';
-        
+
         img.onload = () => {
           imageCache.current.set(i, img);
           loadingQueue.current.delete(i);
           setLoadPercentage((imageCache.current.size / frameCount) * 100);
           resolve();
         };
-        
+
         img.onerror = () => {
           console.error(`Failed to load image: ${imageUrl}`);
           loadingQueue.current.delete(i);
           resolve();
         };
-        
+
         // Small delay to prevent browser overload
         setTimeout(() => {
           img.src = imageUrl;
         }, Math.random() * 100);
       });
-      
+
       promises.push(promise);
     }
-    
+
     return Promise.allSettled(promises);
   }, [isMobile]);
 
@@ -348,21 +359,21 @@ const FactoryTour: React.FC = () => {
       // Start with critical frames (first few and key sections)
       const criticalFrames = [0, 1, 2, 3, 4, 5];
       await loadImageBatch(0, 6, frameCount);
-      
+
       // Check if we have the first frame to start rendering
       if (imageCache.current.has(0)) {
         setImagesLoaded(true);
         drawFrame(0);
         setIsLoading(false);
       }
-      
+
       // Continue loading in small batches with delays
       const batchSize = 25; // Reduced batch size
       const totalBatches = Math.ceil(frameCount / batchSize);
-      
+
       for (let batch = 1; batch < totalBatches; batch++) {
         const startIndex = batch * batchSize;
-        
+
         // Load batch with delay to prevent overwhelming
         setTimeout(async () => {
           await loadImageBatch(startIndex, batchSize, frameCount);
@@ -436,21 +447,21 @@ const FactoryTour: React.FC = () => {
         onUpdate: (self) => {
           const progress = self.progress;
           const targetFrame = progress * (frameCount - 1);
-          
+
           // Predictive loading: load nearby frames
           const currentIndex = Math.floor(targetFrame);
           const loadAhead = 10; // frames to load ahead
           const loadBehind = 5; // frames to load behind
-          
-          for (let i = Math.max(0, currentIndex - loadBehind); 
-               i <= Math.min(frameCount - 1, currentIndex + loadAhead); 
-               i++) {
+
+          for (let i = Math.max(0, currentIndex - loadBehind);
+            i <= Math.min(frameCount - 1, currentIndex + loadAhead);
+            i++) {
             if (!imageCache.current.has(i) && !loadingQueue.current.has(i)) {
               // Load individual frame on-demand
               setTimeout(() => loadImageBatch(i, 1, frameCount), 0);
             }
           }
-          
+
           gsap.to(tour, {
             frame: targetFrame,
             duration: 0.3,
@@ -487,7 +498,7 @@ const FactoryTour: React.FC = () => {
         scrollTriggerInstance.kill();
       }
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-      
+
       // Cleanup image cache on unmount
       imageCache.current.clear();
       loadingQueue.current.clear();

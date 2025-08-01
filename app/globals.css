@@ -25,7 +25,7 @@
 
 @font-face {
   font-family: 'Display';
-  src: url('/font/digital.ttf') format('truetype'),  /* Ensure the file extension is included and the format is 'truetype' */;
+  src: url('/digital.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;  
