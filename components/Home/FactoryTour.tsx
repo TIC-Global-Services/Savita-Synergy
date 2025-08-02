@@ -366,7 +366,7 @@ const FactoryTour: React.FC = () => {
       }
 
       // Continue loading in small batches with delays
-      const batchSize = 25; // Reduced batch size
+      const batchSize = 500; // Reduced batch size
       const totalBatches = Math.ceil(frameCount / batchSize);
 
       for (let batch = 1; batch < totalBatches; batch++) {
@@ -390,43 +390,24 @@ const FactoryTour: React.FC = () => {
       if (index === lastFrame) return;
       lastFrame = index;
       setCurrentFrame(index);
-
+    
       const img = imageCache.current.get(index);
       if (img && img.complete) {
         const canvasWidth = window.innerWidth;
         const canvasHeight = viewportHeight || window.innerHeight;
         context.clearRect(0, 0, canvasWidth, canvasHeight);
-
-        const canvasAspect = canvasWidth / canvasHeight;
-        const imgAspect = img.width / img.height;
-
-        let drawWidth, drawHeight, srcX, srcY;
-
-        if (canvasAspect > imgAspect) {
-          drawWidth = img.width;
-          drawHeight = img.width / canvasAspect;
-          srcX = 0;
-          srcY = (img.height - drawHeight) / 2;
-        } else {
-          drawHeight = img.height;
-          drawWidth = img.height * canvasAspect;
-          srcX = (img.width - drawWidth) / 2;
-          srcY = 0;
-        }
-
-        const srcWidth = drawWidth;
-        const srcHeight = drawHeight;
-
+    
+        // Draw the image to fill the entire canvas, stretching if necessary
         context.drawImage(
           img,
-          srcX,
-          srcY,
-          srcWidth,
-          srcHeight,
-          0,
-          0,
-          canvasWidth,
-          canvasHeight
+          0, // Source X: use entire image
+          0, // Source Y: use entire image
+          img.width, // Source width: entire image
+          img.height, // Source height: entire image
+          0, // Destination X
+          0, // Destination Y
+          canvasWidth, // Destination width: match canvas
+          canvasHeight // Destination height: match canvas
         );
       }
     };
