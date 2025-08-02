@@ -274,7 +274,9 @@ const FactoryTour: React.FC = () => {
 
       loadingQueue.current.add(i);
       const frameNumber = (i + 1).toString().padStart(4, "0");
-      const imageUrl = `https://res.cloudinary.com/dxks5qn1d/image/upload/${version}/savita-assets/3d-sequence/${device}/${frameNumber}.webp`;
+      const imageUrl2 = `https://res.cloudinary.com/dxks5qn1d/image/upload/${version}/savita-assets/3d-sequence/${device}/${frameNumber}.webp`;
+
+      const imageUrl = `${isMobile ? "/mobile-sequence" : "/desktop-sequence"}/compressed/pillow/${frameNumber}.webp`;
 
       const promise = new Promise<void>((resolve) => {
         const img = new Image();
